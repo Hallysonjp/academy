@@ -84,4 +84,104 @@ class Payment_model extends CI_Model {
           }
       }
     }
+
+    // VALIDATE PAGAR.ME PAYMENT
+    public function pagarme_payment($post = "", $public_key = "") {
+        require_once(APPPATH.'../vendor/autoload.php');
+
+
+
+        $pagarme = new PagarMe\Client($public_key, ['headers' => ['verify' => "c:/certs/cacert.pem"]]);
+
+        $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
+
+        $transaction = $pagarme->transactions()->create([
+            'amount'                => $post['amount'],
+            'payment_method'        => 'credit_card',
+            'card_holder_name'      => $post['card_holder_name'],
+            'card_cvv'              => $post['card_cvv'],
+            'card_number'           => $post['card_number'],
+            'card_expiration_date'  => $post['card_expiration_date'],
+            'customer' => [
+                'external_id' => $post['user_id'],
+                'name' => $user_details['first_name']. " " .$user_details['last_name'],
+                'type' => 'individual',
+                'country' => 'br',
+                'documents' => [
+                    [
+                        'type' => 'cpf',
+                        'number' => '00000000000'
+                    ]
+                ],
+                'phone_numbers' => [ '+551199999999' ],
+                'email' => 'cliente@email.com'
+            ],
+            'billing' => [
+                'name' => 'Nome do pagador',
+                'address' => [
+                    'country' => 'br',
+                    'street' => 'Avenida Brigadeiro Faria Lima',
+                    'street_number' => '1811',
+                    'state' => 'sp',
+                    'city' => 'Sao Paulo',
+                    'neighborhood' => 'Jardim Paulistano',
+                    'zipcode' => '01451001'
+                ]
+            ],
+            'shipping' => [
+                'name' => 'Nome de quem receberá o produto',
+                'fee' => 1020,
+                'delivery_date' => '2018-09-22',
+                'expedited' => false,
+                'address' => [
+                    'country' => 'br',
+                    'street' => 'Avenida Brigadeiro Faria Lima',
+                    'street_number' => '1811',
+                    'state' => 'sp',
+                    'city' => 'Sao Paulo',
+                    'neighborhood' => 'Jardim Paulistano',
+                    'zipcode' => '01451001'
+                ]
+            ],
+            'items' => [
+                [
+                    'id' => '1',
+                    'title' => 'R2D2',
+                    'unit_price' => 300,
+                    'quantity' => 1,
+                    'tangible' => true
+                ],
+                [
+                    'id' => '2',
+                    'title' => 'C-3PO',
+                    'unit_price' => 700,
+                    'quantity' => 1,
+                    'tangible' => true
+                ]
+            ]
+        ]);
+
+        var_dump($transaction);
+
+
+
+
+        die();
+        require_once(APPPATH.'libraries/Stripe/init.php');
+        \Stripe\Stripe::setApiKey($stripe_secret_key);
+
+        $customer = \Stripe\Customer::create(array(
+            'email' => $user_details['email'], // client email id
+            'card'  => $token_id
+        ));
+
+        $charge = \Stripe\Charge::create(['customer'  => $customer->id, 'amount' => $amount_paid*100, 'currency' => get_settings('stripe_currency'), 'receipt_email' => $user_details['email']]);
+
+        if($charge->status == 'succeeded'){
+            return true;
+        }else {
+            $this->session->set_flashdata('error_message', get_phrase('an_error_occurred_during_payment'));
+            redirect('home', 'refresh');
+        }
+    }
 }

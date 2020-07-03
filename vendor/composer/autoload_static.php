@@ -34,7 +34,7 @@ class ComposerStaticInit2564a72ab59612f89d481b64abbf7a09
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
             'Prophecy\\' => 9,
-            'PagarMe\\Sdk\\' => 12,
+            'PagarMe\\' => 8,
         ),
         'G' => 
         array (
@@ -80,9 +80,9 @@ class ComposerStaticInit2564a72ab59612f89d481b64abbf7a09
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
         ),
-        'PagarMe\\Sdk\\' => 
+        'PagarMe\\' => 
         array (
-            0 => __DIR__ . '/..' . '/pagarme/pagarme-php/lib',
+            0 => __DIR__ . '/..' . '/pagarme/pagarme-php/src',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (

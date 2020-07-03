@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25c042c48f4116842a99f2cc4df710bc",
+    "content-hash": "671cf298b833d6e9e40f18727c6e2d55",
     "packages": [],
     "packages-dev": [
         {
@@ -346,32 +346,30 @@
         },
         {
             "name": "pagarme/pagarme-php",
-            "version": "v3.8.1",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pagarme/pagarme-php.git",
-                "reference": "97545f554828c195784d805370eda1326389ac16"
+                "reference": "aef493d9c56435467ea1518b36bb4de963b846d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pagarme/pagarme-php/zipball/97545f554828c195784d805370eda1326389ac16",
-                "reference": "97545f554828c195784d805370eda1326389ac16",
+                "url": "https://api.github.com/repos/pagarme/pagarme-php/zipball/aef493d9c56435467ea1518b36bb4de963b846d5",
+                "reference": "aef493d9c56435467ea1518b36bb4de963b846d5",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": ">=5.3",
-                "php": ">=5.4.0"
+                "guzzlehttp/guzzle": ">=6.3",
+                "php": ">=5.6.0"
             },
             "require-dev": {
-                "behat/mink-extension": "^2.2",
-                "ext-mbstring": "*",
-                "phpunit/phpunit": "^4.8",
+                "phpunit/phpunit": "^5.7",
                 "squizlabs/php_codesniffer": "^3.3"
             },
             "type": "lib",
             "autoload": {
                 "psr-4": {
-                    "PagarMe\\Sdk\\": "lib/"
+                    "PagarMe\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -388,7 +386,7 @@
                 "pagarme",
                 "payments brazil"
             ],
-            "time": "2019-05-24T14:35:39+00:00"
+            "time": "2020-06-16T17:06:15+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",

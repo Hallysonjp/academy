@@ -417,6 +417,39 @@ class Home extends CI_Controller {
         $this->load->view('frontend/'.get_frontend_settings('theme').'/pagarme_checkout', $page_data);
     }
 
+    // PAGAR.ME CHECKOUT ACTIONS
+    public function pagarme_payment($user_id = "", $amount_paid = "", $payment_request_mobile = "") {
+        $post = $this->input->post();
+
+        $pagarme_keys = get_settings('pagarme_keys');
+        $values = json_decode($pagarme_keys);
+        if ($values[0]->testmode == 'on') {
+            $public_key = $values[0]->api_key;
+            $secret_key = $values[0]->encrypted_key;
+        } else {
+            $public_key = $values[0]->api_live_key;
+            $secret_key = $values[0]->encrypted_live_key;
+        }
+
+        //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
+        $status = $this->payment_model->pagarme_payment($post, $public_key);
+//        if (!$status) {
+//            $this->session->set_flashdata('error_message', site_phrase('an_error_occurred_during_payment'));
+//            redirect('home', 'refresh');
+//        }
+//
+//        $this->crud_model->enrol_student($user_id);
+//        $this->crud_model->course_purchase($user_id, 'pagarme', $amount_paid);
+//        $this->email_model->course_purchase_notification($user_id, 'pagarme', $amount_paid);
+//        $this->session->set_flashdata('flash_message', site_phrase('payment_successfully_done'));
+//        if($payment_request_mobile == 'true'):
+//            $course_id = $this->session->userdata('cart_items');
+//            redirect('home/payment_success_mobile/'.$course_id[0].'/'.$user_id.'/paid', 'refresh');
+//        else:
+//            $this->session->set_userdata('cart_items', array());
+//            redirect('home', 'refresh');
+//        endif;
+    }
 
     public function lesson($slug = "", $course_id = "", $lesson_id = "") {
         if ($this->session->userdata('user_login') != 1){

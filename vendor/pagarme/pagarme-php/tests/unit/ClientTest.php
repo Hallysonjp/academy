@@ -1,254 +1,171 @@
 <?php
 
-namespace PagarMe\SdkTest;
+namespace PagarMe\Test;
 
-use GuzzleHttp\Client as GuzzleClient;
-use PagarMe\Sdk\Client;
-use PagarMe\Sdk\RequestInterface;
+use PagarMe\Client;
+use PagarMe\Exceptions\PagarMeException;
+use PagarMe\Endpoints\Endpoint;
+use PagarMe\Endpoints\Transactions;
+use PagarMe\Endpoints\Customers;
+use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+final class ClientTest extends TestCase
 {
-    const REQUEST_PATH   = 'test';
-    const CONTENT        = 'sample content';
-    const API_KEY        = 'myApiKey';
-
-    private $guzzleClientMock;
-    private $requestMock;
-
-    public function setup()
+    public function testSuccessfulResponse()
     {
-        $this->guzzleClientMock = $this->getMockBuilder('GuzzleHttp\Client')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], '{"status":"Ok!"}'),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
 
-        $this->pagarMeRequestMock = $this->getMockBuilder('PagarMe\Sdk\RequestInterface')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $client = new Client('apiKey', ['handler' => $handler]);
 
-        $this->pagarMeRequestMock->method('getMethod')->willReturn(RequestInterface::HTTP_POST);
-        $this->pagarMeRequestMock->method('getPath')->willReturn(self::REQUEST_PATH);
-        $this->pagarMeRequestMock->method('getPayload')->willReturn(
-            ['content' => self::CONTENT]
+        $response = $client->request(Endpoint::POST, 'transactions');
+
+        $this->assertEquals($response->status, "Ok!");
+        $this->assertEquals(
+            'api_key=apiKey',
+            $container[0]['request']->getUri()->getQuery()
         );
     }
 
     /**
-     * @test
+     * @expectedException \PagarMe\Exceptions\PagarMeException
      */
-    public function mustSendRequest()
+    public function testPagarMeFailedResponse()
     {
-        if ($this->isUsingLegacyGuzzle()) {
-            $this->guzzleClientMock->method('createRequest')
-                ->willReturn($this->getMock('GuzzleHttp\Message\RequestInterface'));
-        }
+        $mock = new MockHandler([
+            new Response(401, [], '{
+                "errors": [{
+                    "message": "api_key está faltando",
+                    "parameter_name": "api_key",
+                    "type": "invalid_parameter"
+                }],
+                "method": "get",
+                "url": "/transactions"
+            }')
+        ]);
 
-        $responseMock = $this->getResponseMock();
+        $handler = HandlerStack::create($mock);
 
-        $this->guzzleClientMock->expects($this->once())->method('send')
-            ->willReturn($responseMock);
+        $client = new Client('apiKey', ['handler' => $handler]);
 
-        $client = new Client(
-            $this->guzzleClientMock,
-            self::API_KEY
-        );
-
-        $client->send($this->pagarMeRequestMock);
-    }
-
-    /**
-     * @test
-     */
-    public function mustSendRequestWithProperContent()
-    {
-        if ($this->isUsingLegacyGuzzle()) {
-            $this->guzzleClientMock->method('createRequest')
-                ->with(
-                    RequestInterface::HTTP_POST,
-                    self::REQUEST_PATH,
-                    [
-                        'json' => [
-                            'content'        => self::CONTENT,
-                            'api_key'        => self::API_KEY
-                        ],
-                        'timeout' => null
-                    ]
-                )
-                ->willReturn($this->getMock('GuzzleHttp\Message\RequestInterface'));
-        }
-
-        $responseMock = $this->getResponseMock();
-
-        $this->guzzleClientMock->expects($this->once())->method('send')
-            ->willReturn($responseMock);
-
-        $client = new Client(
-            $this->guzzleClientMock,
-            self::API_KEY
-        );
-
-        $client->send($this->pagarMeRequestMock);
-    }
-
-    /**
-     * @expectedException PagarMe\Sdk\ClientException
-     * @test
-     */
-    public function mustReturnClientExceptionWhenGetRequestException()
-    {
-        $guzzleRequestMock = $this->getMock(
-            $this->getGuzzleRequestInterfaceName()
-        );
-
-        if ($this->isUsingLegacyGuzzle()) {
-            $this->guzzleClientMock->method('createRequest')
-                ->willReturn($guzzleRequestMock);
-        }
-
-        $this->guzzleClientMock->method('send')
-            ->will(
-                $this->throwException(
-                    new \GuzzleHttp\Exception\RequestException(
-                        'Exception',
-                        $guzzleRequestMock
-                    )
-                )
-            );
-        $this->guzzleClientMock->expects($this->once())->method('send');
-
-        $client = new Client(
-            $this->guzzleClientMock,
-            self::API_KEY
-        );
-        $client->send($this->pagarMeRequestMock);
-    }
-
-    /**
-     * @test
-     */
-    public function mustReturnClientExceptionParsedCorrectly()
-    {
-        $guzzleRequestMock = $this->getMock(
-            $this->getGuzzleRequestInterfaceName()
-        );
-
-        if ($this->isUsingLegacyGuzzle()) {
-            $this->guzzleClientMock->method('createRequest')
-                ->willReturn($guzzleRequestMock);
-        }
-
-        $this->guzzleClientMock->method('send')
-            ->will(
-                $this->throwException(
-                    new \GuzzleHttp\Exception\RequestException(
-                        '{"error":{"message":"some json error"}}',
-                        $guzzleRequestMock
-                    )
-                )
-            );
-        $this->guzzleClientMock->expects($this->once())->method('send');
-
-        $client = new Client(
-            $this->guzzleClientMock,
-            self::API_KEY
+        $errorType = 'invalid_parameter';
+        $parameter = 'api_key';
+        $message = 'api_key está faltando';
+        $expectedExceptionMessage = sprintf(
+            'ERROR TYPE: %s. PARAMETER: %s. MESSAGE: %s',
+            $errorType,
+            $parameter,
+            $message
         );
 
         try {
-            $client->send($this->pagarMeRequestMock);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('stdClass', json_decode($e->getMessage()));
+            $response = $client->request(Endpoint::POST, 'transactions');
+        } catch (\PagarMe\Exceptions\PagarMeException $exception) {
+            $this->assertEquals($expectedExceptionMessage, $exception->getMessage());
+            $this->assertEquals($parameter, $exception->getParameterName());
+            $this->assertEquals($errorType, $exception->getType());
+
+            throw $exception;
         }
     }
 
     /**
-     * @test
+     * @expectedException \GuzzleHttp\Exception\ServerException
      */
-    public function mustSetDefaultTimeout()
+    public function testRequestFailedResponse()
     {
-        $timeout = 237;
+        $mock = new MockHandler([
+            new Response(502, [], '<div>Bad Gateway</div>')
+        ]);
 
-        $guzzleRequestMock = $this->getMockBuilder(
-            $this->getGuzzleRequestClassName()
-        )->disableOriginalConstructor()
-        ->getMock();
+        $handler = HandlerStack::create($mock);
 
-        if ($this->isUsingLegacyGuzzle()) {
-            $this->guzzleClientMock->method('createRequest')
-                ->willReturn($guzzleRequestMock);
-        }
+        $client = new Client('apiKey', ['handler' => $handler]);
 
-        $responseMock = $this->getResponseMock();
+        $response = $client->request(Endpoint::POST, 'transactions');
+    }
 
-        $this->guzzleClientMock->expects($this->once())
-            ->method('send')
-            ->with(
-                $this->isInstanceOf($this->getGuzzleRequestClassName()),
-                ['timeout' => $timeout]
-            )->willReturn($responseMock);
+    public function testSuccessfulResponseWithCustomUserAgentHeader()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(200, [], '{"status":"Ok!"}'),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push($history);
 
         $client = new Client(
-            $this->guzzleClientMock,
-            self::API_KEY,
-            $timeout
+            'apiKey',
+            [
+                'handler' => $handler,
+                'headers' => [
+                  'User-Agent' => 'MyCustomApplication/10.2.2',
+                  'X-PagarMe-Version' => '2017-07-17',
+                  'Custom-Header' => 'header',
+                ]
+            ]
         );
 
-        $client->send($this->pagarMeRequestMock);
+        $response = $client->request(Endpoint::POST, 'transactions');
+
+        $this->assertEquals($response->status, "Ok!");
+        $this->assertEquals(
+            'api_key=apiKey',
+            $container[0]['request']->getUri()->getQuery()
+        );
+
+        $expectedUserAgent = sprintf(
+            'MyCustomApplication/10.2.2 PHP/%s',
+            phpversion()
+        );
+
+        $this->assertEquals(
+            '2017-07-17',
+            $container[0]['request']->getHeaderLine('X-PagarMe-Version')
+        );
+
+        $this->assertEquals(
+            'header',
+            $container[0]['request']->getHeaderLine('Custom-Header')
+        );
+
+        $this->assertEquals(
+            $expectedUserAgent,
+            $container[0]['request']->getHeaderLine('User-Agent')
+        );
+        $this->assertEquals(
+            $expectedUserAgent,
+            $container[0]['request']->getHeaderLine(
+                Client::PAGARME_USER_AGENT_HEADER
+            )
+        );
     }
 
-    private function isUsingLegacyGuzzle()
+    public function testTransactions()
     {
-        return class_exists('\\GuzzleHttp\\Message\\Request');
+        $client = new Client('apiKey');
+
+        $transactions = $client->transactions();
+
+        $this->assertInstanceOf(Transactions::class, $transactions);
     }
 
-    private function getGuzzleRequestInterfaceName()
+    public function testCustomers()
     {
-        if ($this->isUsingLegacyGuzzle()) {
-            return 'GuzzleHttp\Message\RequestInterface';
-        }
+        $client = new Client('apiKey');
 
-        return 'Psr\Http\Message\RequestInterface';
-    }
+        $customers = $client->customers();
 
-    private function getGuzzleRequestClassName()
-    {
-        if ($this->isUsingLegacyGuzzle()) {
-            return 'GuzzleHttp\Message\Request';
-        }
-
-        return 'GuzzleHttp\Psr7\Request';
-    }
-
-    private function getResponseMock()
-    {
-        if ($this->isUsingLegacyGuzzle()) {
-            $streamMock = $this->getMockBuilder(
-                'GuzzleHttp\Stream\Stream'
-            )->disableOriginalConstructor()
-            ->getMock();
-
-            $responseMock = $this->getMockBuilder(
-                'GuzzleHttp\Message\Response'
-            )->disableOriginalConstructor()
-            ->getMock();
-
-            $responseMock->method('getBody')
-                ->willReturn($streamMock);
-
-            return $responseMock;
-        }
-
-        $streamMock = $this->getMockBuilder(
-            'Psr\Http\Message\StreamInterface'
-        )->disableOriginalConstructor()
-        ->getMock();
-
-        $responseMock = $this->getMockBuilder(
-            'GuzzleHttp\Psr7\Response'
-        )->disableOriginalConstructor()
-        ->getMock();
-
-        $responseMock->method('getBody')
-            ->willReturn($streamMock);
-
-        return $responseMock;
+        $this->assertInstanceOf(Customers::class, $customers);
     }
 }
