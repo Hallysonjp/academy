@@ -91,14 +91,13 @@ class Payment_model extends CI_Model {
 
 
 
-        $pagarme = new PagarMe\Client($public_key, ['headers' => ['verify' => "c:/certs/cacert.pem"]]);
-
+        $pagarme      = new PagarMe\Client($public_key, ['headers' => ['verify' => "c:/certs/cacert.pem"]]);
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
 
         $card = $pagarme->cards()->create([
             'holder_name'       => $post['card_holder_name'],
             'number'            => $post['card_number'],
-            'expiration_date'   => $post['card_expiration_date'],
+            'expiration_date'   => $this->soNumero($post['card_expiration_date']),
             'cvv'               => $post['card_cvv']
         ]);
 
