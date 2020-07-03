@@ -101,9 +101,6 @@ class Payment_model extends CI_Model {
             'cvv'               => $post['card_cvv']
         ]);
 
-        var_dump($card);exit;
-
-
         $transaction = $pagarme->transactions()->create([
             'amount' => 100,
             'card_id' => $card->id,
