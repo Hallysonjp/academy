@@ -96,7 +96,7 @@ class Payment_model extends CI_Model {
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
 
         $transaction = $pagarme->transactions()->create([
-            'amount'                => $post['amount'],
+            'amount'                => 123,
             'payment_method'        => 'credit_card',
             'card_holder_name'      => $post['card_holder_name'],
             'card_cvv'              => $post['card_cvv'],
@@ -110,23 +110,11 @@ class Payment_model extends CI_Model {
                 'documents' => [
                     [
                         'type' => 'cpf',
-                        'number' => '00000000000'
+                        'number' => '55555555555'
                     ]
                 ],
                 'phone_numbers' => [ '+551199999999' ],
                 'email' => 'cliente@email.com'
-            ],
-            'billing' => [
-                'name' => 'Nome do pagador',
-                'address' => [
-                    'country' => 'br',
-                    'street' => 'Avenida Brigadeiro Faria Lima',
-                    'street_number' => '1811',
-                    'state' => 'sp',
-                    'city' => 'Sao Paulo',
-                    'neighborhood' => 'Jardim Paulistano',
-                    'zipcode' => '01451001'
-                ]
             ],
             'items' => [
                 [
@@ -134,21 +122,21 @@ class Payment_model extends CI_Model {
                     'title' => 'R2D2',
                     'unit_price' => 300,
                     'quantity' => 1,
-                    'tangible' => true
+                    'tangible' => false
                 ],
                 [
                     'id' => '2',
                     'title' => 'C-3PO',
                     'unit_price' => 700,
                     'quantity' => 1,
-                    'tangible' => true
+                    'tangible' => false
                 ]
             ]
         ]);
 
-        var_dump($transaction);
+        $tr = json_encode($transaction);
 
-
+        echo $tr;
 
 
         die();
