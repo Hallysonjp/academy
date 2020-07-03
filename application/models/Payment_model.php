@@ -157,7 +157,7 @@ class Payment_model extends CI_Model {
 
         $transaction = $pagarme->transactions()->create([
             'amount' => 100,
-            'card_id' => $card['id'],
+            'card_id' => $card->id,
             'payment_method' => 'credit_card',
             'postback_url' => 'http://requestb.in/pkt7pgpk',
             'customer' => [
