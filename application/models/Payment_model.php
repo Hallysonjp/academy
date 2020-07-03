@@ -144,12 +144,20 @@ class Payment_model extends CI_Model {
 //                    'tangible' => false
 //                ]
 //            ]
-//        ]);
+//
+
+        $card = $pagarme->cards()->create([
+            'holder_name' => 'Yoda',
+            'number' => '4242424242424242',
+            'expiration_date' => '1225',
+            'cvv' => '123'
+        ]);
+
 
 
         $transaction = $pagarme->transactions()->create([
             'amount' => 100,
-            'card_id' => 'card_ci6l9fx8f0042rt16rtb477gj',
+            'card_id' => $card['id'],
             'payment_method' => 'credit_card',
             'postback_url' => 'http://requestb.in/pkt7pgpk',
             'customer' => [
