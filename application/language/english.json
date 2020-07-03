@@ -338,5 +338,6 @@
     "by": "By",
     "remove": "Remove",
     "checkout": "Checkout",
-    "there_are_no_courses_on_your_cart": "There are no courses on your cart"
+    "there_are_no_courses_on_your_cart": "There are no courses on your cart",
+    "system_settings_updated": "System settings updated"
 }
