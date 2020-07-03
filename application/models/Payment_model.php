@@ -95,26 +95,103 @@ class Payment_model extends CI_Model {
 
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
 
+//        $transaction = $pagarme->transactions()->create([
+//            'amount'                => 123,
+//            'payment_method'        => 'credit_card',
+//            'card_holder_name'      => $post['card_holder_name'],
+//            'card_cvv'              => $post['card_cvv'],
+//            'card_number'           => $post['card_number'],
+//            'card_expiration_date'  => $this->soNumero($post['card_expiration_date']),
+//            'customer' => [
+//                'external_id' => $post['user_id'],
+//                'name' => $user_details['first_name']. " " .$user_details['last_name'],
+//                'type' => 'individual',
+//                'country' => 'br',
+//                'documents' => [
+//                    [
+//                        'type' => 'cpf',
+//                        'number' => '55555555555'
+//                    ]
+//                ],
+//                'phone_numbers' => [ '+551199999999' ],
+//                'email' => 'cliente@email.com'
+//            ],
+//            "billing" => [
+//                "name" => "Trinity Moss",
+//                    "address" => [
+//                        "country" => "br",
+//                        "state" => "sp",
+//                        "city" => "Cotia",
+//                        "neighborhood" => "Rio Cotia",
+//                        "street" => "Rua Matrix",
+//                        "steet_number" => "9999",
+//                        "zipcode" => "06714360"
+//              ]
+//            ],
+//            'items' => [
+//                [
+//                    'id' => '1',
+//                    'title' => 'R2D2',
+//                    'unit_price' => 300,
+//                    'quantity' => 1,
+//                    'tangible' => false
+//                ],
+//                [
+//                    'id' => '2',
+//                    'title' => 'C-3PO',
+//                    'unit_price' => 700,
+//                    'quantity' => 1,
+//                    'tangible' => false
+//                ]
+//            ]
+//        ]);
+
+
         $transaction = $pagarme->transactions()->create([
-            'amount'                => 123,
-            'payment_method'        => 'credit_card',
-            'card_holder_name'      => $post['card_holder_name'],
-            'card_cvv'              => $post['card_cvv'],
-            'card_number'           => $post['card_number'],
-            'card_expiration_date'  => $this->soNumero($post['card_expiration_date']),
+            'amount' => 100,
+            'card_id' => 'card_ci6l9fx8f0042rt16rtb477gj',
+            'payment_method' => 'credit_card',
+            'postback_url' => 'http://requestb.in/pkt7pgpk',
             'customer' => [
-                'external_id' => $post['user_id'],
-                'name' => $user_details['first_name']. " " .$user_details['last_name'],
+                'external_id' => '0001',
+                'name' => 'Aardvark Silva',
+                'email' => 'aardvark.silva@pagar.me',
                 'type' => 'individual',
                 'country' => 'br',
                 'documents' => [
                     [
                         'type' => 'cpf',
-                        'number' => '55555555555'
+                        'number' => '67415765095'
                     ]
                 ],
-                'phone_numbers' => [ '+551199999999' ],
-                'email' => 'cliente@email.com'
+                'phone_numbers' => [ '+551199999999' ]
+            ],
+            'billing' => [
+                'name' => 'Nome do pagador',
+                'address' => [
+                    'country' => 'br',
+                    'street' => 'Avenida Brigadeiro Faria Lima',
+                    'street_number' => '1811',
+                    'state' => 'sp',
+                    'city' => 'Sao Paulo',
+                    'neighborhood' => 'Jardim Paulistano',
+                    'zipcode' => '01451001'
+                ]
+            ],
+            'shipping' => [
+                'name' => 'Nome de quem receberá o produto',
+                'fee' => 1020,
+                'delivery_date' => '2018-09-22',
+                'expedited' => false,
+                'address' => [
+                    'country' => 'br',
+                    'street' => 'Avenida Brigadeiro Faria Lima',
+                    'street_number' => '1811',
+                    'state' => 'sp',
+                    'city' => 'Sao Paulo',
+                    'neighborhood' => 'Jardim Paulistano',
+                    'zipcode' => '01451001'
+                ]
             ],
             'items' => [
                 [
@@ -122,14 +199,14 @@ class Payment_model extends CI_Model {
                     'title' => 'R2D2',
                     'unit_price' => 300,
                     'quantity' => 1,
-                    'tangible' => false
+                    'tangible' => true
                 ],
                 [
                     'id' => '2',
                     'title' => 'C-3PO',
                     'unit_price' => 700,
                     'quantity' => 1,
-                    'tangible' => false
+                    'tangible' => true
                 ]
             ]
         ]);
