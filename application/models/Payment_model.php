@@ -104,7 +104,7 @@ class Payment_model extends CI_Model {
             'amount' => (int) $post['amount'],
             'card_id' => $card->id,
             'payment_method' => 'credit_card',
-            'postback_url' => 'http://requestb.in/pkt7pgpk',
+//            'postback_url' => 'http://requestb.in/pkt7pgpk',
             'customer' => [
                 'external_id' => $user_details['id'],
                 'name' => $user_details['first_name'] . " " . $user_details['last_name'],
