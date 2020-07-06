@@ -285,7 +285,7 @@
 									</span>
 								</span>
 								<span class="by-owner">
-									<?php echo get_phrase('by'); ?>
+									<?php echo 'por'; ?>
 									<?php echo $instructor_details['first_name'].' '.$instructor_details['last_name']; ?>
 								</span>
 							</p>
@@ -293,7 +293,7 @@
 					</div>
 					<div class="w-100 float-left mt-4 indicated-price">
 						<div class="float-right total-price"><?php echo currency($total_price_of_checking_out); ?></div>
-						<div class="float-right total"><?php echo get_phrase('total'); ?></div>
+						<div class="float-right total"><?php echo 'Total'; ?></div>
 					</div>
 					<div class="w-100 float-left">
 <!--						<form action="--><?php //echo site_url('home/paypal_checkout'); ?><!--" method="post" class="paypal-form form">-->

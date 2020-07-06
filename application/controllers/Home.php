@@ -418,7 +418,7 @@ class Home extends CI_Controller {
     }
 
     // PAGAR.ME CHECKOUT ACTIONS
-    public function pagarme_payment($user_id = "", $amount_paid = "", $payment_request_mobile = "") {
+    public function pagarme_payment() {
         $post = $this->input->post();
 
         $pagarme_keys = get_settings('pagarme_keys');
@@ -429,6 +429,11 @@ class Home extends CI_Controller {
         } else {
             $public_key = $values[0]->api_live_key;
             $secret_key = $values[0]->encrypted_live_key;
+        }
+
+        $this->user_model->update_user_data($post);
+        if(empty($this->user_model->has_address($post)->row_array())){
+            $this->user_model->insert_user_address($post);
         }
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
