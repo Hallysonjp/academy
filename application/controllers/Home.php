@@ -438,22 +438,15 @@ class Home extends CI_Controller {
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
         $status = $this->payment_model->pagarme_payment($post, $public_key);
-//        if (!$status) {
-//            $this->session->set_flashdata('error_message', site_phrase('an_error_occurred_during_payment'));
-//            redirect('home', 'refresh');
-//        }
-//
-//        $this->crud_model->enrol_student($user_id);
-//        $this->crud_model->course_purchase($user_id, 'pagarme', $amount_paid);
-//        $this->email_model->course_purchase_notification($user_id, 'pagarme', $amount_paid);
-//        $this->session->set_flashdata('flash_message', site_phrase('payment_successfully_done'));
-//        if($payment_request_mobile == 'true'):
-//            $course_id = $this->session->userdata('cart_items');
-//            redirect('home/payment_success_mobile/'.$course_id[0].'/'.$user_id.'/paid', 'refresh');
-//        else:
-//            $this->session->set_userdata('cart_items', array());
-//            redirect('home', 'refresh');
-//        endif;
+
+        $this->crud_model->enrol_student($post['user_id']);
+        $this->crud_model->course_purchase($post['user_id'], 'pagarme', $post['amount']);
+        $this->email_model->course_purchase_notification($post['user_id'], 'pagarme', $post['amount']);
+        $this->session->set_flashdata('flash_message', 'Pagamento efetuado com sucesso!');
+
+        $this->session->set_userdata('cart_items', []);
+        redirect('home/my_courses', 'refresh');
+
     }
 
     public function lesson($slug = "", $course_id = "", $lesson_id = "") {
