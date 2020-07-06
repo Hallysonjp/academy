@@ -89,20 +89,19 @@ class Payment_model extends CI_Model {
     public function pagarme_payment($post = "", $public_key = "") {
         require_once(APPPATH.'../vendor/autoload.php');
 
-
-
         $pagarme      = new PagarMe\Client($public_key, ['headers' => ['verify' => "c:/certs/cacert.pem"]]);
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
+        $user_address = $this->user_model->has_address($post)->row_array();
 
         $card = $pagarme->cards()->create([
-            'holder_name'       => $post['card_holder_name'],
-            'number'            => $post['card_number'],
-            'expiration_date'   => $this->soNumero($post['card_expiration_date']),
-            'cvv'               => $post['card_cvv']
+            'holder_name'       => $post['name'],
+            'number'            => $post['number'],
+            'expiration_date'   => $this->soNumero($post['expiry']),
+            'cvv'               => $post['123']
         ]);
 
         $transaction = $pagarme->transactions()->create([
-            'amount' => 100,
+            'amount' => (int) $post['amount'],
             'card_id' => $card->id,
             'payment_method' => 'credit_card',
             'postback_url' => 'http://requestb.in/pkt7pgpk',
@@ -115,7 +114,7 @@ class Payment_model extends CI_Model {
                 'documents' => [
                     [
                         'type' => 'cpf',
-                        'number' => '67415765095'
+                        'number' => $this->soNumero($user_details['cpf'])
                     ]
                 ],
                 'phone_numbers' => [ '+551199999999' ]
@@ -124,27 +123,12 @@ class Payment_model extends CI_Model {
                 'name' => 'Nome do pagador',
                 'address' => [
                     'country' => 'br',
-                    'street' => 'Avenida Brigadeiro Faria Lima',
-                    'street_number' => '1811',
-                    'state' => 'sp',
-                    'city' => 'Sao Paulo',
-                    'neighborhood' => 'Jardim Paulistano',
-                    'zipcode' => '01451001'
-                ]
-            ],
-            'shipping' => [
-                'name' => 'Nome de quem receberá o produto',
-                'fee' => 1020,
-                'delivery_date' => '2018-09-22',
-                'expedited' => false,
-                'address' => [
-                    'country' => 'br',
-                    'street' => 'Avenida Brigadeiro Faria Lima',
-                    'street_number' => '1811',
-                    'state' => 'sp',
-                    'city' => 'Sao Paulo',
-                    'neighborhood' => 'Jardim Paulistano',
-                    'zipcode' => '01451001'
+                    'street' => $user_address['endereco'],
+                    'street_number' => $user_address['numero'],
+                    'state' => strtolower($user_address['estado']),
+                    'city' => $user_address['cidade'],
+                    'neighborhood' => $user_address['bairro'],
+                    'zipcode' => $this->soNumero($user_address['cep'])
                 ]
             ],
             'items' => [
@@ -167,21 +151,9 @@ class Payment_model extends CI_Model {
 
         $tr = json_encode($transaction);
 
-        echo $tr;
+        var_dump($tr); exit;
 
-
-        die();
-        require_once(APPPATH.'libraries/Stripe/init.php');
-        \Stripe\Stripe::setApiKey($stripe_secret_key);
-
-        $customer = \Stripe\Customer::create(array(
-            'email' => $user_details['email'], // client email id
-            'card'  => $token_id
-        ));
-
-        $charge = \Stripe\Charge::create(['customer'  => $customer->id, 'amount' => $amount_paid*100, 'currency' => get_settings('stripe_currency'), 'receipt_email' => $user_details['email']]);
-
-        if($charge->status == 'succeeded'){
+        if($tr->status == 'succeeded'){
             return true;
         }else {
             $this->session->set_flashdata('error_message', get_phrase('an_error_occurred_during_payment'));

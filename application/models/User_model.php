@@ -157,6 +157,41 @@ class User_model extends CI_Model {
         return $this->db->insert_id();
     }
 
+    public function update_user_data($data){
+
+        $updateData = [
+            'cpf' => $data['cpf']
+        ];
+
+        $this->db->where('id', $data['user_id']);
+        $this->db->update('users', $updateData);
+        $this->session->set_flashdata('flash_message', 'Dados atualizados.');
+
+//        $this->insert_user_address($data);
+    }
+
+    public function insert_user_address($data){
+
+        $dados = [
+            'user_id'     => $data['user_id'],
+            'endereco'    => $data['endereco'],
+            'numero'      => $data['numero'],
+            'complemento' => $data['complemento'],
+            'cep'         => $data['cep'],
+            'bairro'      => $data['bairro'],
+            'cidade'      => $data['cidade'],
+            'estado'      => $data['estado'],
+            'pais'        => $data['pais'],
+        ];
+
+        $this->db->insert('user_address', $dados);
+        $address_id = $this->db->insert_id();
+    }
+
+    public function has_address($data){
+        return $this->db->get_where('user_address', ['user_id' => $data['user_id']]);
+    }
+
     public function my_courses($user_id = "") {
         if ($user_id == "") {
             $user_id = $this->session->userdata('user_id');
