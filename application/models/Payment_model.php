@@ -149,9 +149,7 @@ class Payment_model extends CI_Model {
             ]
         ]);
 
-        var_dump($transaction->status);exit;
-
-        if($tr->status == 'paid'){
+        if($transaction->status == 'paid'){
             return true;
         }else {
             $this->session->set_flashdata('error_message', 'Ocorreu um erro durante o pagamento.');
