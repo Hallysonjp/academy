@@ -97,7 +97,7 @@ class Payment_model extends CI_Model {
             'holder_name'       => $post['name'],
             'number'            => $post['number'],
             'expiration_date'   => $this->soNumero($post['expiry']),
-            'cvv'               => $post['123']
+            'cvv'               => $post['cvv']
         ]);
 
         $transaction = $pagarme->transactions()->create([
