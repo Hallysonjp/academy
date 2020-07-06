@@ -149,9 +149,7 @@ class Payment_model extends CI_Model {
             ]
         ]);
 
-        $tr = json_encode($transaction);
-
-        var_dump($tr->status);exit;
+        var_dump($transaction->status);exit;
 
         if($tr->status == 'paid'){
             return true;
