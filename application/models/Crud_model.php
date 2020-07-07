@@ -1475,7 +1475,7 @@ class Crud_model extends CI_Model
 
             public function enrol_student($user_id)
             {
-                $purchased_courses = $this->session->userdata('cart_items');
+                $purchased_courses = $this->session->userdata('cart_items');var_dump($purchased_courses);exit;
                 foreach ($purchased_courses as $purchased_course) {
                     $data['user_id'] = $user_id;
                     $data['course_id'] = $purchased_course;
