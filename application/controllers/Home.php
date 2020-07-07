@@ -420,7 +420,7 @@ class Home extends CI_Controller {
     // PAGAR.ME CHECKOUT ACTIONS
     public function pagarme_payment() {
         $post = $this->input->post();
-
+        $purchased_courses = $this->session->userdata('cart_items');var_dump($purchased_courses);exit;
         $pagarme_keys = get_settings('pagarme_keys');
         $values = json_decode($pagarme_keys);
         if ($values[0]->testmode == 'on') {
