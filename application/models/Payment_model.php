@@ -147,7 +147,7 @@ class Payment_model extends CI_Model {
         ];
 
         if($payment_method == 'boleto'){
-            $data['postback_url'] = 'https://portal.ladiesboss.com.br/home/pagarme_postback';
+            $data['postback_url'] = 'https://portal.ladiesboss.com.br/academy/home/pagarme_postback';
         }else{
             $card = $pagarme->cards()->create([
                 'holder_name'       => $post['name'],
