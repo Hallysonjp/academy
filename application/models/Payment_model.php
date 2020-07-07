@@ -86,25 +86,37 @@ class Payment_model extends CI_Model {
     }
 
     // VALIDATE PAGAR.ME PAYMENT
-    public function pagarme_payment($post = "", $public_key = "") {
+    public function pagarme_payment($post = "", $public_key = "", $payment_method = "credit_card") {
         require_once(APPPATH.'../vendor/autoload.php');
 
-        $pagarme      = new PagarMe\Client($public_key, ['headers' => ['verify' => "c:/certs/cacert.pem"]]);
+        $pagarme      = new PagarMe\Client($public_key);
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
         $user_address = $this->user_model->has_address($post)->row_array();
 
-        $card = $pagarme->cards()->create([
-            'holder_name'       => $post['name'],
-            'number'            => $post['number'],
-            'expiration_date'   => $this->soNumero($post['expiry']),
-            'cvv'               => $post['cvv']
-        ]);
+        $telefones = [
+            $user_details['celular'] ? '+55'.$this->soNumero($user_details['celular']) : null,
+            $user_details['telefone'] ? '+55'.$this->soNumero($user_details['telefone']) : null,
+        ];
 
-        $transaction = $pagarme->transactions()->create([
+        $itens = []; $counter = 0;
+
+        foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
+            $counter++;
+            $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
+            $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
+
+            $itens[] = [
+                'id'         => $course_details['id'],
+                'title'      => $course_details['title'],
+                'unit_price' => ((int) $course_details['price'] * 100),
+                'quantity' => 1,
+                'tangible' => false
+            ];
+        }
+
+        $data = [
             'amount' => (int) $post['amount'],
-            'card_id' => $card->id,
-            'payment_method' => 'credit_card',
-//            'postback_url' => 'http://requestb.in/pkt7pgpk',
+            'payment_method' => $payment_method,
             'customer' => [
                 'external_id' => $user_details['id'],
                 'name' => $user_details['first_name'] . " " . $user_details['last_name'],
@@ -117,10 +129,10 @@ class Payment_model extends CI_Model {
                         'number' => $this->soNumero($user_details['cpf'])
                     ]
                 ],
-                'phone_numbers' => [ '+551199999999' ]
+                'phone_numbers' => $telefones
             ],
             'billing' => [
-                'name' => 'Nome do pagador',
+                'name' => $user_details['first_name'] . " " . $user_details['last_name'],
                 'address' => [
                     'country' => 'br',
                     'street' => $user_address['endereco'],
@@ -131,23 +143,23 @@ class Payment_model extends CI_Model {
                     'zipcode' => $this->soNumero($user_address['cep'])
                 ]
             ],
-            'items' => [
-                [
-                    'id' => '1',
-                    'title' => 'R2D2',
-                    'unit_price' => 300,
-                    'quantity' => 1,
-                    'tangible' => true
-                ],
-                [
-                    'id' => '2',
-                    'title' => 'C-3PO',
-                    'unit_price' => 700,
-                    'quantity' => 1,
-                    'tangible' => true
-                ]
-            ]
-        ]);
+            'items' => $itens
+        ];
+
+        if($payment_method == 'boleto'){
+            $data['postback_url'] = 'https://portal.ladiesboss.com.br/academy/home/pagarme_postback';
+        }else{
+            $card = $pagarme->cards()->create([
+                'holder_name'       => $post['name'],
+                'number'            => $post['number'],
+                'expiration_date'   => $this->soNumero($post['expiry']),
+                'cvv'               => $post['cvc']
+            ]);
+
+            $data['card_id'] = $card->id;
+        }
+
+        $transaction = $pagarme->transactions()->create($data);
 
         if($transaction->status == 'paid'){
             return true;

@@ -420,7 +420,6 @@ class Home extends CI_Controller {
     // PAGAR.ME CHECKOUT ACTIONS
     public function pagarme_payment() {
         $post = $this->input->post();
-        $purchased_courses = $this->session->userdata('cart_items');var_dump($purchased_courses);exit;
         $pagarme_keys = get_settings('pagarme_keys');
         $values = json_decode($pagarme_keys);
         if ($values[0]->testmode == 'on') {
@@ -437,7 +436,7 @@ class Home extends CI_Controller {
         }
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
-        $status = $this->payment_model->pagarme_payment($post, $public_key);
+        $status = $this->payment_model->pagarme_payment($post, $public_key, $post['boleto'] ? 'boleto' : 'credit_card');
 
         $this->crud_model->enrol_student($post['user_id']);
         $this->crud_model->course_purchase($post['user_id'], 'pagarme', $post['amount']);
@@ -447,6 +446,10 @@ class Home extends CI_Controller {
         $this->session->set_userdata('cart_items', []);
         redirect('home/my_courses', 'refresh');
 
+    }
+
+    public function pagarme_postback(){
+        log_message('error', var_dump($_POST));
     }
 
     public function lesson($slug = "", $course_id = "", $lesson_id = "") {

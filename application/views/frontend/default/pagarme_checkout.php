@@ -40,6 +40,7 @@
 <?php
 $userData     = $this->session->userdata();
 $user         = $this->user_model->get_user($userData['user_id'])->row_array();
+$user_address = $this->user_model->has_address($userData)->row_array();
 $pagarme_keys = get_settings('pagarme_keys');
 $values       = json_decode($pagarme_keys);
 if ($values[0]->testmode == 'on') {
@@ -95,26 +96,32 @@ if ($values[0]->testmode == 'on') {
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-phone">Telefone</label>
-                            <input class="form-control phone_with_ddd" name="phone" type="text" id="checkout-phone">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
                             <label for="checkout-email">E-mail</label>
                             <input class="form-control" type="email" name="email" value="<?= $user['email'] ?? null ?>" id="checkout-email">
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-phone">Telefone</label>
-                            <input class="form-control phone_with_ddd" name="phone2" type="text" id="checkout-phone">
+                            <input class="form-control phone_with_ddd" name="telefone" type="text" value="<?= $user['telefone'] ?? null ?>" id="checkout-phone">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="checkout-phone">Celular</label>
+                            <input class="form-control cel_with_ddd" name="celular" type="text" value="<?= $user['celular'] ?? null ?>" id="checkout-phone">
                         </div>
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="checkout-zip">CEP</label>
+                            <input class="form-control cep" name="cep" type="text" value="<?= $user_address['cep'] ?? null ?>" id="cep">
+                        </div>
+                    </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-country">País</label>
@@ -124,6 +131,8 @@ if ($values[0]->testmode == 'on') {
                             </select>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-city">Estado</label>
@@ -160,32 +169,24 @@ if ($values[0]->testmode == 'on') {
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-zip">Cidade</label>
-                            <input class="form-control cidade" name="cidade" type="text" id="cidade">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="checkout-zip">Bairro</label>
-                            <input class="form-control bairro" name="bairro" type="text" id="bairro">
+                            <input class="form-control cidade" name="cidade" value="<?= $user_address['cidade'] ?? null ?>" type="text" id="cidade">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-zip">CEP</label>
-                            <input class="form-control cep" name="cep" type="text" id="cep">
+                            <label for="checkout-zip">Bairro</label>
+                            <input class="form-control bairro" name="bairro" value="<?= $user_address['bairro'] ?? null ?>" type="text" id="bairro">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-address-1">Endereço</label>
-                            <input class="form-control" type="text" name="endereco" id="endereco">
+                            <input class="form-control" type="text" name="endereco" value="<?= $user_address['endereco'] ?? null ?>" id="endereco">
                         </div>
                     </div>
                 </div>
@@ -193,13 +194,13 @@ if ($values[0]->testmode == 'on') {
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-address-1">Número</label>
-                            <input class="form-control" type="text" name="numero" id="numero">
+                            <input class="form-control" type="text" value="<?= $user_address['numero'] ?? null ?>" name="numero" id="numero">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-address-2">Complemento</label>
-                            <input class="form-control" type="text" name="complemento" id="complemento">
+                            <input class="form-control" type="text" name="complemento" value="<?= $user_address['complemento'] ?? null ?>" id="complemento">
                         </div>
                     </div>
                 </div>
@@ -242,7 +243,7 @@ if ($values[0]->testmode == 'on') {
                                     <input class="form-control" type="text" name="expiry" placeholder="MM/AA" required>
                                 </div>
                                 <div class="form-group col-sm-3">
-                                    <input class="form-control" type="text" name="cvc" placeholder="CVC" required>
+                                    <input class="form-control" type="text" name="cvc" placeholder="CVV" required>
                                 </div>
                                 <div class="col-sm-6">
                                     <button class="btn btn-outline-primary btn-block mt-0" type="submit">Finalizar Pagamento</button>
@@ -257,21 +258,16 @@ if ($values[0]->testmode == 'on') {
                     </div>
                     <div class="collapse" id="paypal" data-parent="#payment-method" role="tabpanel">
                         <div class="card-body">
-                            <p><strong>PayPal</strong> - the safer, easier way to pay</p>
+                            <p><strong>Boleto bancário!</strong> Selecione para pagar com boleto</p>
                             <form class="row" method="post">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <input class="form-control" type="email" placeholder="E-mail" required>
+                                        <input class="deal-checkbox" type="checkbox" name="boleto"> <label class="" for="boleto"> Boleto Bancário</label>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <input class="form-control" type="password" placeholder="Password" required>
-                                    </div>
-                                </div>
+
                                 <div class="col-12">
-                                    <div class="d-flex flex-wrap justify-content-between align-items-center"><a class="navi-link" href="#">Forgot password?</a>
-                                        <button class="btn btn-primary btn-sm" type="button">Log In</button>
+                                        <button class="btn btn-primary btn-sm" type="submit">Gerar Boleto</button>
                                     </div>
                                 </div>
                             </form>

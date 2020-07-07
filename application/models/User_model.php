@@ -158,16 +158,15 @@ class User_model extends CI_Model {
     }
 
     public function update_user_data($data){
-
         $updateData = [
-            'cpf' => $data['cpf']
+            'cpf'       => $data['cpf'] ?? null,
+            'telefone'  => $data['telefone'] ?? null,
+            'celular'   => $data['celular'] ?? null
         ];
 
         $this->db->where('id', $data['user_id']);
         $this->db->update('users', $updateData);
         $this->session->set_flashdata('flash_message', 'Dados atualizados.');
-
-//        $this->insert_user_address($data);
     }
 
     public function insert_user_address($data){
