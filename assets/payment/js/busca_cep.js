@@ -28,18 +28,19 @@ $(document).ready(function() {
                 $("#endereco").val("...");
                 $("#bairro").val("...");
                 $("#cidade").val("...");
-                $("#uf").val("...");
+                $("#estado").val("...");
                 $("#ibge").val("...");
 
                 //Consulta o webservice viacep.com.br/
                 $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
 
                     if (!("erro" in dados)) {
+                        var option = "value="+dados.uf;
                         //Atualiza os campos com os valores da consulta.
                         $("#endereco").val(dados.logradouro);
                         $("#bairro").val(dados.bairro);
                         $("#cidade").val(dados.localidade);
-                        $("#uf").val(dados.uf);
+                        $("#estado option["+option+"]").attr('selected', 'selected');
                         $("#ibge").val(dados.ibge);
                     } //end if.
                     else {
