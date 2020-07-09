@@ -33,4 +33,14 @@ $(document).ready(function(){
         }
     });
     $('.selectonfocus').mask("00/00/0000", {selectOnFocus: true});
+
+    $("#parcelas").on('change', function () {
+        var parcela = $(this).children('option:selected').val();
+        var valor   = $("#total-"+parcela).text();
+        var amount  = $("#total-"+parcela).data('valor');
+
+        $('#valor').val(valor);
+        $('#amount').val(amount);
+    })
+
 });

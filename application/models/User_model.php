@@ -23,6 +23,13 @@ class User_model extends CI_Model {
         return $this->db->get('users');
     }
 
+    public function get_user_by_email($email = null) {
+
+        $this->db->where('email', $email);
+        $this->db->where('role_id', 2);
+        return $this->db->get('users');
+    }
+
     public function get_all_user($user_id = 0) {
         if ($user_id > 0) {
             $this->db->where('id', $user_id);
@@ -185,6 +192,32 @@ class User_model extends CI_Model {
 
         $this->db->insert('user_address', $dados);
         $address_id = $this->db->insert_id();
+    }
+
+    public function add_user_checkout($dados = null) {
+
+        $data['first_name']      = $dados['first_name'];
+        $data['last_name']       = $dados['last_name'];
+        $data['email']           = $dados['email'];
+        $data['password']        = sha1(html_escape($dados['password']));
+        $data['cpf']             = $dados['cpf'];
+        $social_link['facebook'] = '#';
+        $social_link['twitter']  = '#';
+        $social_link['linkedin'] = '#';
+        $data['social_links']    = json_encode($social_link);
+        $data['biography']       = null;
+        $data['role_id']         = 2;
+        $data['date_added']      = strtotime(date("Y-m-d H:i:s"));
+        $data['wishlist']        = json_encode([]);
+        $data['watch_history']   = json_encode([]);
+        $data['status']          = 1;
+
+
+        $this->db->insert('users', $data);
+        $user_id = $this->db->insert_id();
+        $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
+
+        return $user_id;
     }
 
     public function has_address($data){

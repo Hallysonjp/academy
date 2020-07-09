@@ -39,8 +39,10 @@
 <body>
 <?php
 $userData     = $this->session->userdata();
-$user         = $this->user_model->get_user($userData['user_id'])->row_array();
-$user_address = $this->user_model->has_address($userData)->row_array();
+if(isset($userData['user_id'])){
+    $user         = $this->user_model->get_user($userData['user_id'])->row_array();
+    $user_address = $this->user_model->has_address($userData)->row_array();
+}
 $pagarme_keys = get_settings('pagarme_keys');
 $values       = json_decode($pagarme_keys);
 if ($values[0]->testmode == 'on') {
@@ -50,6 +52,7 @@ if ($values[0]->testmode == 'on') {
     $public_key  = $values[0]->api_live_key;
     $private_key = $values[0]->encrypted_live_key;
 }
+$parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 ?>
 <!-- Page Title-->
 <div class="page-title-wrapper" aria-label="Page title">
@@ -68,36 +71,35 @@ if ($values[0]->testmode == 'on') {
 <!-- Page Content-->
 <div class="container pb-5 mb-sm-4 mt-n2 mt-md-n3">
     <form method="post" action="<?php echo site_url('home/pagarme_payment/');?>" name="myform" novalidate>
-        <input type="hidden" name="amount" value="<?= ($amount_to_pay * 100)?>">
-        <input type="hidden" name="user_id" value="<?= $user_details['id'] ?>">
+        <input type="hidden" name="user_id" value="<?= $user_details['id'] ?? null ?>">
         <div class="row pt-4 mt-2">
         <div class="col-xl-9 col-md-8">
                 <h6 class="h6 px-4 py-3 bg-secondary mb-4">Dados do comprador</h6>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-fn">Nome</label>
-                            <input class="form-control" name="first_name" value="<?= $user['first_name'] ?? null ?>" type="text" id="checkout-fn">
+                            <label for="checkout-fn">Nome *</label>
+                            <input class="form-control" required name="first_name" value="<?= $user['first_name'] ?? null ?>" type="text" id="checkout-fn">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-ln">Sobrenome</label>
-                            <input class="form-control" name="last_name" type="text" value="<?= $user['last_name'] ?? null ?>" id="checkout-ln">
+                            <label for="checkout-ln">Sobrenome *</label>
+                            <input class="form-control" name="last_name" required type="text" value="<?= $user['last_name'] ?? null ?>" id="checkout-ln">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-email">CPF</label>
-                            <input class="form-control cpf" name="cpf" type="text" value="<?= $user['cpf'] ?? null ?>" id="checkout-email">
+                            <label for="checkout-email">CPF *</label>
+                            <input class="form-control cpf" required name="cpf" type="text" value="<?= $user['cpf'] ?? null ?>" id="checkout-email">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-email">E-mail</label>
-                            <input class="form-control" type="email" name="email" value="<?= $user['email'] ?? null ?>" id="checkout-email">
+                            <label for="checkout-email">E-mail *</label>
+                            <input class="form-control" type="email" required name="email" value="<?= $user['email'] ?? null ?>" id="checkout-email">
                         </div>
                     </div>
                 </div>
@@ -110,22 +112,22 @@ if ($values[0]->testmode == 'on') {
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-phone">Celular</label>
-                            <input class="form-control cel_with_ddd" name="celular" type="text" value="<?= $user['celular'] ?? null ?>" id="checkout-phone">
+                            <label for="checkout-phone">Celular *</label>
+                            <input class="form-control cel_with_ddd" name="celular" required type="text" value="<?= $user['celular'] ?? null ?>" id="checkout-phone">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-zip">CEP</label>
-                            <input class="form-control cep" name="cep" type="text" value="<?= $user_address['cep'] ?? null ?>" id="cep">
+                            <label for="checkout-zip">CEP *</label>
+                            <input class="form-control cep" name="cep" required type="text" value="<?= $user_address['cep'] ?? null ?>" id="cep">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-country">País</label>
-                            <select class="form-control custom-select" name="pais" id="checkout-country">
+                            <select class="form-control custom-select" readonly name="pais" id="checkout-country">
                                 <option>Escolher país</option>
                                 <option value="BR" selected>Brasil</option>
                             </select>
@@ -172,7 +174,7 @@ if ($values[0]->testmode == 'on') {
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-zip">Cidade</label>
-                            <input class="form-control cidade" name="cidade" value="<?= $user_address['cidade'] ?? null ?>" type="text" id="cidade">
+                            <input class="form-control cidade" readonly name="cidade" value="<?= $user_address['cidade'] ?? null ?>" type="text" id="cidade">
                         </div>
                     </div>
                 </div>
@@ -180,13 +182,13 @@ if ($values[0]->testmode == 'on') {
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-zip">Bairro</label>
-                            <input class="form-control bairro" name="bairro" value="<?= $user_address['bairro'] ?? null ?>" type="text" id="bairro">
+                            <input class="form-control bairro" name="bairro" readonly value="<?= $user_address['bairro'] ?? null ?>" type="text" id="bairro">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-address-1">Endereço</label>
-                            <input class="form-control" type="text" name="endereco" value="<?= $user_address['endereco'] ?? null ?>" id="endereco">
+                            <input class="form-control" type="text" name="endereco" readonly value="<?= $user_address['endereco'] ?? null ?>" id="endereco">
                         </div>
                     </div>
                 </div>
@@ -213,12 +215,26 @@ if ($values[0]->testmode == 'on') {
         <div class="col-xl-3 col-md-4 pt-4 mt-3 pt-md-0 mt-md-0">
             <h2 class="h6 px-4 py-3 bg-secondary text-center">Detalhes do pedido</h2>
             <div class="font-size-sm border-bottom pt-2 pb-3">
+                <?php if(!empty($course_id)):?>
+                    <div class="d-flex justify-content-between mb-2"><span>Curso:</span><span><strong><?= $course_title ?></strong></span></div>
+                <?php endif;?>
                 <div class="d-flex justify-content-between mb-2"><span>Subtotal:</span><span>R$ <?= $valor ?></span></div>
                 <div class="d-flex justify-content-between mb-2"><span>Entrega:</span><span>R$ 0,00</span></div>
                 <div class="d-flex justify-content-between mb-2"><span>Taxas:</span><span>R$ 0,00</span></div>
-                <div class="d-flex justify-content-between"><span>Discount:</span><span>&mdash;</span></div>
+                <div class="d-flex justify-content-between"><span>Desconto:</span><span>&mdash;</span></div>
             </div>
             <div class="h3 font-weight-semibold text-center py-3">R$ <?= $valor ?></div>
+
+            <h2 class="h6 px-4 py-3 bg-secondary text-center">Parcelamento</h2>
+            <div class="font-size-sm border-bottom pt-2 pb-3">
+                <?php foreach($parcelas->installments as $parcela): ?>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><?= $parcela->installment ?>x - R$ <?= valueFormat($parcela->installment_amount) ?></span>
+                        <span id="total-<?= $parcela->installment ?>" data-valor="<?= $parcela->amount ?>">R$ <?= valueFormat($parcela->amount) ?></span>
+                    </div>
+                <?php endforeach; ?>
+
+            </div>
         </div>
         <!-- Content-->
         <div class="col-xl-9 col-md-8">
@@ -239,13 +255,34 @@ if ($values[0]->testmode == 'on') {
                                 <div class="form-group col-sm-6">
                                     <input class="form-control" type="text" name="name" placeholder="Nome do Portador" required>
                                 </div>
-                                <div class="form-group col-sm-3">
+                                <div class="form-group col-sm-2">
                                     <input class="form-control" type="text" name="expiry" placeholder="MM/AA" required>
                                 </div>
-                                <div class="form-group col-sm-3">
+                                <div class="form-group col-sm-2">
                                     <input class="form-control" type="text" name="cvc" placeholder="CVV" required>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="form-group col-sm-2">
+                                    <select name="parcelas" id="parcelas" class="form-control">
+                                        <option value="1" selected>1x</option>
+                                        <option value="2">2x</option>
+                                        <option value="3">3x</option>
+                                        <option value="4">4x</option>
+                                        <option value="5">5x</option>
+                                        <option value="6">6x</option>
+                                        <option value="7">7x</option>
+                                        <option value="8">8x</option>
+                                        <option value="9">9x</option>
+                                        <option value="10">10x</option>
+                                        <option value="11">11x</option>
+                                        <option value="12">12x</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <input type="text" readonly class="form-control" id="valor" name="valor" value="R$ <?= $valor ?>">
+                                    <input type="hidden" name="amount" id="amount" value="<?= $amount_to_pay * 100 ?>">
+                                </div>
+
+                                <div class="col-sm-3">
                                     <button class="btn btn-outline-primary btn-block mt-0" type="submit">Finalizar Pagamento</button>
                                 </div>
                             </div>
@@ -290,9 +327,9 @@ if ($values[0]->testmode == 'on') {
 <script src="<?= base_url() ?>assets/payment/js/vendor.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/card.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/theme.min.js"></script>
-<script src="<?= base_url() ?>assets/payment/customizer/customizer.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/jquery.mask.js"></script>
-<script src="<?= base_url() ?>assets/payment/js/custom.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/busca_cep.js"></script>
+<script src="<?= base_url() ?>assets/payment/js/custom.js"></script>
+<script src="<?= base_url() ?>assets/payment/customizer/customizer.min.js"></script>
 </body>
 </html>
