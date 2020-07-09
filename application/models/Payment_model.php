@@ -147,7 +147,9 @@ class Payment_model extends CI_Model {
         ];
 
         if($payment_method == 'boleto'){
-            $data['postback_url'] = 'https://portal.ladiesboss.com.br/academy/home/pagarme_postback';
+            $data['postback_url'] = "https://portal.ladiesboss.com.br/academy/home/pagarme_postback";
+            $data['capture']      = true;
+            $data['async']        = false;
         }else{
             $card = $pagarme->cards()->create([
                 'holder_name'       => $post['name'],
@@ -155,18 +157,36 @@ class Payment_model extends CI_Model {
                 'expiration_date'   => $this->soNumero($post['expiry']),
                 'cvv'               => $post['cvc']
             ]);
-
-            $data['card_id'] = $card->id;
+            $data['installments'] = $post['parcelas'];
+            $data['card_id']      = $card->id;
         }
 
         $transaction = $pagarme->transactions()->create($data);
 
         if($transaction->status == 'paid'){
             return true;
-        }else {
-            $this->session->set_flashdata('error_message', 'Ocorreu um erro durante o pagamento.');
+        } elseif ($payment_method == 'boleto'){
+            $this->session->set_userdata('transaction', $transaction);
+            redirect('home/pagarme_boleto');
+        } else {
+            $this->session->set_flashdata('error_message', 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente');
             redirect('home', 'refresh');
         }
+    }
+
+    public function checkar_taxa_juros($publicKey, $data = null){
+        require_once(APPPATH.'../vendor/autoload.php');
+
+        $pagarme = new PagarMe\Client($publicKey);
+
+        $calculateInstallments = $pagarme->transactions()->calculateInstallments([
+            'amount' => 99700,
+            'free_installments' => 1,
+            'max_installments' => 12,
+            'interest_rate' => 5
+        ]);
+
+        return $calculateInstallments;
     }
 
     public function soNumero($str) {

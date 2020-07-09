@@ -286,13 +286,13 @@ class Home extends CI_Controller {
         if ($this->session->userdata('user_login') == 1)
         echo true;
         else
-        echo false;
+        echo true;
     }
 
     //choose payment gateway
     public function payment(){
-        if ($this->session->userdata('user_login') != 1)
-        redirect('login', 'refresh');
+//        if ($this->session->userdata('user_login') != 1)
+//        redirect('login', 'refresh');
 
         $page_data['total_price_of_checking_out'] = $this->session->userdata('total_price_of_checking_out');
         $page_data['page_title'] = site_phrase("payment_gateway");
@@ -402,8 +402,8 @@ class Home extends CI_Controller {
 
     // SHOW PAGARME CHECKOUT PAGE
     public function pagarme_checkout($payment_request = "only_for_mobile") {
-        if ($this->session->userdata('user_login') != 1 && $payment_request != 'true')
-            redirect('home', 'refresh');
+//        if ($this->session->userdata('user_login') != 1 && $payment_request != 'true')
+//            redirect('home', 'refresh');
 
         //checking price
         if($this->session->userdata('total_price_of_checking_out') == $this->input->post('total_price_of_checking_out')):
@@ -414,6 +414,14 @@ class Home extends CI_Controller {
         $page_data['payment_request'] = $payment_request;
         $page_data['user_details']    = $this->user_model->get_user($this->session->userdata('user_id'))->row_array();
         $page_data['amount_to_pay']   = $total_price_of_checking_out;
+        $this->load->view('frontend/'.get_frontend_settings('theme').'/pagarme_checkout', $page_data);
+    }
+
+    public function checkout_direto($curso_id = 0) {
+        $curso = $this->crud_model->get_course_by_id($curso_id)->row_array();
+        $page_data['amount_to_pay']   = (int) $curso['price'];
+        $page_data['course_id']       = $curso['id'];
+        $page_data['course_title']    = $curso['title'];
         $this->load->view('frontend/'.get_frontend_settings('theme').'/pagarme_checkout', $page_data);
     }
 
@@ -430,13 +438,29 @@ class Home extends CI_Controller {
             $secret_key = $values[0]->encrypted_live_key;
         }
 
+        if(empty($this->session->userdata('user_login'))){
+            $user = $this->user_model->get_user_by_email($post['email'])->row_array();
+            if(!empty($user)){
+                $post['user_id'] = $user['id'];
+            }else{
+                $user_add['first_name'] = $post['first_name'];
+                $user_add['last_name']  = $post['last_name'];
+                $user_add['email']      = $post['email'];
+                $user_add['password']   = $this->payment_model->soNumero($post['cpf']);
+                $user_add['cpf']        = $post['cpf'];
+                $user_id = $this->user_model->add_user_checkout($user_add);
+
+                $post['user_id'] = $user_id;
+            }
+        }
+
         $this->user_model->update_user_data($post);
         if(empty($this->user_model->has_address($post)->row_array())){
             $this->user_model->insert_user_address($post);
         }
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
-        $status = $this->payment_model->pagarme_payment($post, $public_key, $post['boleto'] ? 'boleto' : 'credit_card');
+        $status = $this->payment_model->pagarme_payment($post, $public_key, isset($post['boleto']) ? 'boleto' : 'credit_card');
 
         $this->crud_model->enrol_student($post['user_id']);
         $this->crud_model->course_purchase($post['user_id'], 'pagarme', $post['amount']);
@@ -450,6 +474,10 @@ class Home extends CI_Controller {
 
     public function pagarme_postback(){
         log_message('error', var_dump($_POST));
+    }
+
+    public function pagarme_boleto(){
+        $this->load->view('frontend/'.get_frontend_settings('theme').'/pagarme_boleto');
     }
 
     public function lesson($slug = "", $course_id = "", $lesson_id = "") {
