@@ -156,28 +156,44 @@ class Payment_model extends CI_Model {
             $data['capture']      = true;
             $data['async']        = false;
         }else{
-            $card = $pagarme->cards()->create([
-                'holder_name'       => $post['name'],
-                'number'            => $post['number'],
-                'expiration_date'   => $this->soNumero($post['expiry']),
-                'cvv'               => $post['cvc']
-            ]);
-            $data['installments'] = $post['parcelas'];
-            $data['card_id']      = $card->id;
-            $data['async']        = false;
+            try{
+                $card = $pagarme->cards()->create([
+                    'holder_name'       => $post['name'],
+                    'number'            => $post['number'],
+                    'expiration_date'   => $this->soNumero($post['expiry']),
+                    'cvv'               => $post['cvc']
+                ]);
+
+                $data['installments'] = $post['parcelas'];
+                $data['card_id']      = $card->id;
+                $data['async']        = false;
+            }catch (\PagarMe\Exceptions\PagarMeException $e){
+                if($e->getType() == "invalid_parameter"){
+                    return [
+                        'status' => false,
+                        'message' => "Encontramos um erro no campo: ".$e->getParameterName()."\nO campo está vazio ou o formato é inválido."
+                    ];
+                }
+            }
+
         }
 
-        $transaction = $pagarme->transactions()->create($data);
+        try {
+            $transaction = $pagarme->transactions()->create($data);
 
-        if($transaction->status == 'paid'){
-            return true;
-        } elseif ($payment_method == 'boleto'){
-            $this->session->set_userdata('transaction', $transaction);
-            redirect('home/pagarme_boleto');
-        } else {
+            if($transaction->status == 'paid'){
+                return ['status' => true];
+            } elseif ($payment_method == 'boleto'){
+                $this->session->set_userdata('transaction', $transaction);
+                redirect('home/pagarme_boleto');
+            } else {
+                return ['status' => false];
+            }
+        }catch (\PagarMe\Exceptions\PagarMeException $e){
             $this->session->set_flashdata('error_message', 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente');
-            redirect('home', 'refresh');
         }
+
+
     }
 
     public function checkar_taxa_juros($publicKey, $data = null){

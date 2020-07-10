@@ -16,7 +16,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
     <link rel="mask-icon" color="#111" href="safari-pinned-tab.svg">
     <meta name="msapplication-TileColor" content="#111">
     <meta name="theme-color" content="#ffffff">
@@ -26,14 +25,8 @@
     <link rel="stylesheet" media="screen" id="main-styles" href="<?= base_url() ?>assets/payment/css/theme.min.css">
     <!-- Customizer styles and scripts-->
     <link rel="stylesheet" media="screen" href="<?= base_url() ?>assets/payment/customizer/customizer.min.css">
+    <link rel="stylesheet" href="<?php echo base_url().'assets/global/toastr/toastr.css' ?>">
     <!-- Google Tag Manager-->
-    <script>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            '../../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-PVV9F7F');
-    </script>
 </head>
 <!-- Body-->
 <body>
@@ -70,7 +63,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 </div>
 <!-- Page Content-->
 <div class="container pb-5 mb-sm-4 mt-n2 mt-md-n3">
-    <form method="post" action="<?php echo site_url('home/pagarme_payment/');?>" name="myform" novalidate>
+    <form method="post" action="<?php echo site_url('home/pagarme_payment/');?>" name="myform">
         <input type="hidden" name="user_id" value="<?= $user_details['id'] ?? null ?>">
         <div class="row pt-4 mt-2">
         <div class="col-xl-9 col-md-8">
@@ -138,7 +131,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-city">Estado</label>
-                            <select class="form-control custom-select" id="estado" name="estado">
+                            <select class="form-control custom-select" required id="estado" name="estado">
                                 <option value="">Escolher estado</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -174,7 +167,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-zip">Cidade</label>
-                            <input class="form-control cidade" readonly name="cidade" value="<?= $user_address['cidade'] ?? null ?>" type="text" id="cidade">
+                            <input class="form-control cidade" required readonly name="cidade" value="<?= $user_address['cidade'] ?? null ?>" type="text" id="cidade">
                         </div>
                     </div>
                 </div>
@@ -182,13 +175,13 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-zip">Bairro</label>
-                            <input class="form-control bairro" name="bairro" readonly value="<?= $user_address['bairro'] ?? null ?>" type="text" id="bairro">
+                            <input class="form-control bairro" name="bairro" required readonly value="<?= $user_address['bairro'] ?? null ?>" type="text" id="bairro">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-address-1">Endereço</label>
-                            <input class="form-control" type="text" name="endereco" readonly value="<?= $user_address['endereco'] ?? null ?>" id="endereco">
+                            <input class="form-control" type="text" name="endereco" required readonly value="<?= $user_address['endereco'] ?? null ?>" id="endereco">
                         </div>
                     </div>
                 </div>
@@ -223,18 +216,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                 <div class="d-flex justify-content-between mb-2"><span>Taxas:</span><span>R$ 0,00</span></div>
                 <div class="d-flex justify-content-between"><span>Desconto:</span><span>&mdash;</span></div>
             </div>
-            <div class="h3 font-weight-semibold text-center py-3">R$ <?= $valor ?></div>
-
-            <h2 class="h6 px-4 py-3 bg-secondary text-center">Parcelamento</h2>
-            <div class="font-size-sm border-bottom pt-2 pb-3">
-                <?php foreach($parcelas->installments as $parcela): ?>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span><?= $parcela->installment ?>x - R$ <?= valueFormat($parcela->installment_amount) ?></span>
-                        <span id="total-<?= $parcela->installment ?>" data-valor="<?= $parcela->amount ?>">R$ <?= valueFormat($parcela->amount) ?></span>
-                    </div>
-                <?php endforeach; ?>
-
-            </div>
+            <div class="h5 font-weight-semibold text-center py-3">R$ <?= $valor ?> (à vista)</div>
         </div>
         <!-- Content-->
         <div class="col-xl-9 col-md-8">
@@ -249,10 +231,10 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 <!--                            <p>We accept following credit cards:&nbsp;&nbsp;<img class="d-inline-block align-middle" src="img/cards.png" style="width: 187px;" alt="Cerdit Cards"></p>-->
                             <div class="card-wrapper"></div>
                             <div class="interactive-credit-card row">
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <input class="form-control" type="text" name="number" placeholder="Número do cartão" required>
                                 </div>
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <input class="form-control" type="text" name="name" placeholder="Nome do Portador" required>
                                 </div>
                                 <div class="form-group col-sm-2">
@@ -261,28 +243,24 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                                 <div class="form-group col-sm-2">
                                     <input class="form-control" type="text" name="cvc" placeholder="CVV" required>
                                 </div>
-                                <div class="form-group col-sm-2">
+                                <div class="form-group col-sm-4">
+                                    <div style="display: none">
+                                        <?php foreach($parcelas->installments as $parcela): ?>
+                                            <span id="total-<?= $parcela->installment ?>" data-valor="<?= $parcela->amount ?>">R$ <?= valueFormat($parcela->amount) ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
                                     <select name="parcelas" id="parcelas" class="form-control">
-                                        <option value="1" selected>1x</option>
-                                        <option value="2">2x</option>
-                                        <option value="3">3x</option>
-                                        <option value="4">4x</option>
-                                        <option value="5">5x</option>
-                                        <option value="6">6x</option>
-                                        <option value="7">7x</option>
-                                        <option value="8">8x</option>
-                                        <option value="9">9x</option>
-                                        <option value="10">10x</option>
-                                        <option value="11">11x</option>
-                                        <option value="12">12x</option>
+                                        <?php foreach($parcelas->installments as $parcela): ?>
+                                            <option value="<?= $parcela->installment ?>"><?= $parcela->installment ?>x - R$ <?= valueFormat($parcela->installment_amount) ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-sm-3">
+                                <div class="form-group col-sm-4">
                                     <input type="text" readonly class="form-control" id="valor" name="valor" value="R$ <?= $valor ?>">
                                     <input type="hidden" name="amount" id="amount" value="<?= $amount_to_pay * 100 ?>">
                                 </div>
 
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <button class="btn btn-outline-primary btn-block mt-0" type="submit">Finalizar Pagamento</button>
                                 </div>
                             </div>
@@ -304,7 +282,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                                 </div>
 
                                 <div class="col-12">
-                                        <button class="btn btn-primary btn-sm" type="submit">Gerar Boleto</button>
+                                        <button class="btn btn-outline-primary mt-0" type="submit">Gerar Boleto</button>
                                     </div>
                                 </div>
                             </form>
@@ -331,5 +309,15 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 <script src="<?= base_url() ?>assets/payment/js/busca_cep.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/custom.js"></script>
 <script src="<?= base_url() ?>assets/payment/customizer/customizer.min.js"></script>
+<script src="<?= base_url().'assets/global/toastr/toastr.min.js'; ?>"></script>
+
+
+<?php if (!empty($this->session->flashdata('error_message'))):?>
+    <script type="text/javascript">
+        alert('erro');
+        toastError('<?php echo $this->session->flashdata('error_message');?>')
+    </script>
+<?php endif;?>
+
 </body>
 </html>

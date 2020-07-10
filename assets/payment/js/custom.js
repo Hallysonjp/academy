@@ -44,3 +44,8 @@ $(document).ready(function(){
     })
 
 });
+
+function toastError(message){
+    console.log(message);
+    toastr.error(message);
+}

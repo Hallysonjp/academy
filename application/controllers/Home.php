@@ -463,15 +463,19 @@ class Home extends CI_Controller {
         }
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
-        $status = $this->payment_model->pagarme_payment($post, $public_key, isset($post['boleto']) ? 'boleto' : 'credit_card');
+        $payment = $this->payment_model->pagarme_payment($post, $public_key, isset($post['boleto']) ? 'boleto' : 'credit_card');
 
-        if($status){
+        if($payment['status']){
             $this->crud_model->enrol_student($post['user_id']);
             $this->crud_model->course_purchase($post['user_id'], 'pagarme', $post['amount']);
             $this->email_model->course_purchase_notification($post['user_id'], 'pagarme', $post['amount']);
             $this->session->set_flashdata('flash_message', 'Pagamento efetuado com sucesso!');
             $this->session->set_userdata('cart_items', []);
             redirect('home/checkout_success', 'refresh');
+        }else{
+            $itens = $this->session->userdata('cart_items');
+            $this->session->set_flashdata('error_message', $payment['message']);
+            redirect('home/checkout_direto/'.current($itens)['id']);
         }
     }
 
