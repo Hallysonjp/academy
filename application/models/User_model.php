@@ -217,6 +217,13 @@ class User_model extends CI_Model {
         $user_id = $this->db->insert_id();
         $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
 
+
+        $this->session->set_userdata('user_id', $user_id);
+        $this->session->set_userdata('role_id', 2);
+        $this->session->set_userdata('role', get_user_role('user_role', $user_id));
+        $this->session->set_userdata('name', $data['first_name'].' ' .$data['last_name']);
+        $this->session->set_userdata('is_instructor', 0);
+
         return $user_id;
     }
 
