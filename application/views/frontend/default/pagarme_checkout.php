@@ -7,7 +7,7 @@
     <title>Finalizar Pedido | Academy
     </title>
     <!-- SEO Meta Tags-->
-    <meta name="description" content="MStore - Modern Bootstrap E-commerce Template">
+    <meta name="description" content="EAD Marketing">
     <meta name="keywords" content="bootstrap, shop, e-commerce, market, modern, responsive,  business, mobile, bootstrap 4, html5, css3, jquery, js, gallery, slider, touch, creative, clean">
     <meta name="author" content="Createx Studio">
     <!-- Viewport-->
