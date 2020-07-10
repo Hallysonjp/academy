@@ -419,6 +419,9 @@ class Home extends CI_Controller {
 
     public function checkout_direto($curso_id = 0) {
         $curso = $this->crud_model->get_course_by_id($curso_id)->row_array();
+        if(empty($this->session->userdata('cart_items'))){
+            $this->session->set_userdata('cart_items', [$curso_id]);
+        }
         $page_data['amount_to_pay']   = (int) $curso['price'];
         $page_data['course_id']       = $curso['id'];
         $page_data['course_title']    = $curso['title'];
