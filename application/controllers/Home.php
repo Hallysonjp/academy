@@ -471,12 +471,16 @@ class Home extends CI_Controller {
             $this->email_model->course_purchase_notification($post['user_id'], 'pagarme', $post['amount']);
             $this->session->set_flashdata('flash_message', 'Pagamento efetuado com sucesso!');
             $this->session->set_userdata('cart_items', []);
-            redirect('home/my_courses', 'refresh');
+            redirect('home/checkout_success', 'refresh');
         }
     }
 
     public function pagarme_postback(){
         log_message('error', var_dump($_POST));
+    }
+
+    public function checkout_success(){
+        $this->load->view('frontend/'.get_frontend_settings('theme').'/checkout_success');
     }
 
     public function pagarme_boleto(){
