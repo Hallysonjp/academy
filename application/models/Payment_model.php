@@ -93,10 +93,15 @@ class Payment_model extends CI_Model {
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
         $user_address = $this->user_model->has_address($post)->row_array();
 
-        $telefones = [
-            $user_details['celular'] ? '+55'.$this->soNumero($user_details['celular']) : null,
-            $user_details['telefone'] ? '+55'.$this->soNumero($user_details['telefone']) : null,
-        ];
+        $telefones = [];
+
+        if(isset($user_details['celular'])){
+            array_push($telefones, '+55'.$this->soNumero($user_details['celular']));
+        }
+
+        if(isset($user_details['telefone'])){
+            array_push($telefones, '+55'.$this->soNumero($user_details['telefone']));
+        }
 
         $itens = []; $counter = 0;
 
