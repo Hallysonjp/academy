@@ -168,7 +168,6 @@ class Payment_model extends CI_Model {
 
         $transaction = $pagarme->transactions()->create($data);
 
-        var_dump($transaction);exit; die();
         if($transaction->status == 'paid'){
             return true;
         } elseif ($payment_method == 'boleto'){
