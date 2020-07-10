@@ -57,7 +57,7 @@
         <div class="card py-3 mt-sm-3">
             <div class="card-body text-center">
                 <h3 class="h4 pb-3">Seu pedido foi concluído com sucesso!</h3>
-                <p class="mb-2">Seu curso já está discponível.</p>
+                <p class="mb-2">Seu curso já está disponível.</p>
                 <p class="mb-2"></p>
                 <p>Caso este seja o seu primeiro acesso, você poderá efetuar o Login utilizando seu e-mail e CPF como senha.</p>
                 <a class="btn btn-secondary mt-3 mr-3" href="<?php echo base_url().'/home' ?>">Início</a><a class="btn btn-primary mt-3" href="<?= base_url().'/login' ?>"><i data-feather="map-pin"></i>&nbsp;Login</a>
