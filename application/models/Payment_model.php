@@ -95,11 +95,11 @@ class Payment_model extends CI_Model {
 
         $telefones = [];
 
-        if(isset($user_details['celular'])){
+        if(!empty($user_details['celular'])){
             array_push($telefones, '+55'.$this->soNumero($user_details['celular']));
         }
 
-        if(isset($user_details['telefone'])){
+        if(!empty($user_details['telefone'])){
             array_push($telefones, '+55'.$this->soNumero($user_details['telefone']));
         }
         var_dump($telefones);exit;
