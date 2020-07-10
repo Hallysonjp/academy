@@ -164,16 +164,20 @@ class Payment_model extends CI_Model {
             ]);
             $data['installments'] = $post['parcelas'];
             $data['card_id']      = $card->id;
+            $data['async']        = false;
         }
 
         $transaction = $pagarme->transactions()->create($data);
-
+        var_dump($transaction);
         if($transaction->status == 'paid'){
+            die('aqui1');
             return true;
         } elseif ($payment_method == 'boleto'){
+            die('aqui2');
             $this->session->set_userdata('transaction', $transaction);
             redirect('home/pagarme_boleto');
         } else {
+            die('aqui3');
             $this->session->set_flashdata('error_message', 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente');
             redirect('home', 'refresh');
         }
