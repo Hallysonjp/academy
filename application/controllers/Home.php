@@ -464,7 +464,7 @@ class Home extends CI_Controller {
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
         $status = $this->payment_model->pagarme_payment($post, $public_key, isset($post['boleto']) ? 'boleto' : 'credit_card');
-        var_dump($status);exit;
+
         if($status){
             $this->crud_model->enrol_student($post['user_id']);
             $this->crud_model->course_purchase($post['user_id'], 'pagarme', $post['amount']);
