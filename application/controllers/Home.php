@@ -419,7 +419,7 @@ class Home extends CI_Controller {
 
     public function checkout_direto($curso_id = 0) {
         $curso = $this->crud_model->get_course_by_id($curso_id)->row_array();
-        if(empty($this->session->userdata('cart_items'))){
+        if(count($this->session->userdata('cart_items')) < 1){
             $this->session->set_userdata('cart_items', [$curso_id]);
         }
         $page_data['amount_to_pay']   = (int) $curso['price'];
@@ -464,7 +464,7 @@ class Home extends CI_Controller {
 
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
         $status = $this->payment_model->pagarme_payment($post, $public_key, isset($post['boleto']) ? 'boleto' : 'credit_card');
-        var_dump($this->session->userdata('cart_items'));exit;
+
         $this->crud_model->enrol_student($post['user_id']);
         $this->crud_model->course_purchase($post['user_id'], 'pagarme', $post['amount']);
         $this->email_model->course_purchase_notification($post['user_id'], 'pagarme', $post['amount']);
