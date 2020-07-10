@@ -1,2 +1,5 @@
+.gitignore
 application/config/database.php
 academy/
+uploads/
+application/logs/
