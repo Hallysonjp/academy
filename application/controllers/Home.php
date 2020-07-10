@@ -461,7 +461,7 @@ class Home extends CI_Controller {
         if(empty($this->user_model->has_address($post)->row_array())){
             $this->user_model->insert_user_address($post);
         }
-        var_dump($this->session->userdata('cart_items'));exit;
+        var_dump($this->session->userdata('cart_items'));die('aqui');
         //THIS IS HOW I CHECKED THE STRIPE PAYMENT STATUS
         $status = $this->payment_model->pagarme_payment($post, $public_key, isset($post['boleto']) ? 'boleto' : 'credit_card');
 
