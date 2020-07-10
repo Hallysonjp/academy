@@ -102,7 +102,7 @@ class Payment_model extends CI_Model {
         if(isset($user_details['telefone'])){
             array_push($telefones, '+55'.$this->soNumero($user_details['telefone']));
         }
-
+        var_dump($telefones);exit;
         $itens = []; $counter = 0;
 
         foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
