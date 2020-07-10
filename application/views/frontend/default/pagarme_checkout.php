@@ -195,8 +195,8 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="checkout-address-1">Número</label>
-                            <input class="form-control" type="text" value="<?= $user_address['numero'] ?? null ?>" name="numero" id="numero">
+                            <label for="checkout-address-1">Número *</label>
+                            <input class="form-control" required type="text" value="<?= $user_address['numero'] ?? null ?>" name="numero" id="numero">
                         </div>
                     </div>
                     <div class="col-sm-6">
