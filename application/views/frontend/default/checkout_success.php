@@ -65,7 +65,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                 <li class="breadcrumb-item"><a href="#">Finalizar Pedido</a></li>
             </ol>
         </nav>
-        <h1 class="page-title">Finalizar Pedido</h1><span class="d-block mt-2 text-muted"></span>
+        <h1 class="page-title">Pedido concluído</h1><span class="d-block mt-2 text-muted"></span>
     </div>
 </div>
 <!-- Page Content-->
@@ -83,10 +83,10 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
     </div>
 </div>
 <!-- Footer-->
-<footer class="page-footer bg-dark">
+<footer class="page-footer bg-dark" style="position: absolute;bottom: 0; width: 100%">
 
     <div class="py-3" style="background-color: #1a1a1a;">
-        <div class="container font-size-xs text-center" aria-label="Copyright"><span class="text-white opacity-60 mr-1">© All rights reserved. Made by</span><a class="nav-link-inline nav-link-light" href="https://createx.studio/" target="_blank">Createx Studio</a></div>
+        <div class="container font-size-xs text-center" aria-label="Copyright"><span class="text-white opacity-60 mr-1">© Todos os direitos reservados</div>
     </div>
 </footer>
 <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
