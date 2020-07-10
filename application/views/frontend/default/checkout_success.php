@@ -37,23 +37,6 @@
 </head>
 <!-- Body-->
 <body>
-<?php
-$userData     = $this->session->userdata();
-if(isset($userData['user_id'])){
-    $user         = $this->user_model->get_user($userData['user_id'])->row_array();
-    $user_address = $this->user_model->has_address($userData)->row_array();
-}
-$pagarme_keys = get_settings('pagarme_keys');
-$values       = json_decode($pagarme_keys);
-if ($values[0]->testmode == 'on') {
-    $public_key  = $values[0]->api_key;
-    $private_key = $values[0]->encrypted_key;
-} else {
-    $public_key  = $values[0]->api_live_key;
-    $private_key = $values[0]->encrypted_live_key;
-}
-$parcelas = $this->payment_model->checkar_taxa_juros($public_key);
-?>
 <!-- Page Title-->
 <div class="page-title-wrapper" aria-label="Page title">
     <div class="container">
