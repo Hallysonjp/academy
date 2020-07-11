@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from demo.createx.studio/mstore/checkout-payment.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 06 Jul 2020 14:56:08 GMT -->
 <head>
     <meta charset="utf-8">
     <title>Finalizar Pedido | Academy
@@ -86,7 +85,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="checkout-email">CPF *</label>
-                            <input class="form-control cpf" required name="cpf" type="text" value="<?= $user['cpf'] ?? null ?>" id="checkout-email">
+                            <input class="form-control cpf" required name="cpf" type="text" value="<?= $user['cpf'] ?? null ?>" id="cpf">
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -217,6 +216,10 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                 <div class="d-flex justify-content-between"><span>Desconto:</span><span>&mdash;</span></div>
             </div>
             <div class="h5 font-weight-semibold text-center py-3">R$ <?= $valor ?> (à vista)</div>
+            <div class="h6 text-center py-3">
+                Ou em até <?php
+                        $parcela = end($parcelas->installments);
+                        echo current((array)($parcela->installment)); ?>x de R$ <?php echo valueFormat(current((array)($parcela->installment_amount))); ?></div>
         </div>
         <!-- Content-->
         <div class="col-xl-9 col-md-8">
@@ -310,12 +313,12 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 <script src="<?= base_url() ?>assets/payment/js/custom.js"></script>
 <script src="<?= base_url() ?>assets/payment/customizer/customizer.min.js"></script>
 <script src="<?= base_url().'assets/global/toastr/toastr.min.js'; ?>"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
 <?php if (!empty($this->session->flashdata('error_message'))):?>
     <script type="text/javascript">
-        alert('erro');
-        toastError('<?php echo $this->session->flashdata('error_message');?>')
+        swal('<?php echo $this->session->flashdata('error_message');?>', 'error');
     </script>
 <?php endif;?>
 

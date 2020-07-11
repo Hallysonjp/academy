@@ -46,14 +46,14 @@ $(document).ready(function() {
                     else {
                         //CEP pesquisado não foi encontrado.
                         limpa_formulário_cep();
-                        alert("CEP não encontrado.");
+                        swal("CEP não encontrado.", 'warning');
                     }
                 });
             } //end if.
             else {
                 //cep é inválido.
                 limpa_formulário_cep();
-                alert("Formato de CEP inválido.");
+                swal("Formato de CEP inválido.", 'warning');
             }
         } //end if.
         else {
