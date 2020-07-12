@@ -190,7 +190,10 @@ class Payment_model extends CI_Model {
                 return ['status' => false];
             }
         }catch (\PagarMe\Exceptions\PagarMeException $e){
-            $this->session->set_flashdata('error_message', 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente');
+            return [
+                'status' => false,
+                'message' => 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente'
+            ];
         }
 
 

@@ -97,3 +97,7 @@ function validarCPF(cpf) {
         return false;
     return true;
 }
+
+function alertMessage(message, type) {
+    swal(message, type);
+}

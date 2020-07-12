@@ -418,6 +418,9 @@ class Home extends CI_Controller {
     }
 
     public function checkout_direto($curso_id = 0) {
+        if(!empty($this->session->flashdata('error_message'))){
+            $page_data['error_message'] = $this->session->flashdata('error_message');
+        }
         $curso = $this->crud_model->get_course_by_id($curso_id)->row_array();
         if(count($this->session->userdata('cart_items')) < 1){
             $this->session->set_userdata('cart_items', [$curso_id]);

@@ -62,6 +62,11 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 </div>
 <!-- Page Content-->
 <div class="container pb-5 mb-sm-4 mt-n2 mt-md-n3">
+    <?php if (!empty($error_message)):?>
+        <div class="alert alert-danger" role="alert">
+            <?= $error_message ?>
+        </div>
+    <?php endif;?>
     <form method="post" action="<?php echo site_url('home/pagarme_payment/');?>" name="myform">
         <input type="hidden" name="user_id" value="<?= $user_details['id'] ?? null ?>">
         <div class="row pt-4 mt-2">
@@ -315,12 +320,6 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
 <script src="<?= base_url().'assets/global/toastr/toastr.min.js'; ?>"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-
-<?php if (!empty($this->session->flashdata('error_message'))):?>
-    <script type="text/javascript">
-        swal('<?php echo $this->session->flashdata('error_message');?>', 'error');
-    </script>
-<?php endif;?>
 
 </body>
 </html>
