@@ -157,10 +157,17 @@ class Payment_model extends CI_Model {
             $data['async']        = false;
         }else{
             try{
+
+                $expiry     = $post['expiry'] ?? null;var_dump($expiry);
+                $arrayex    = explode(' / ', $expiry);
+                $yearExpiry = substr($arrayex[1], -2);
+
+                $ex         = $arrayex[0].$yearExpiry;
+
                 $card = $pagarme->cards()->create([
                     'holder_name'       => $post['name'],
                     'number'            => $post['number'],
-                    'expiration_date'   => $this->soNumero($post['expiry']),
+                    'expiration_date'   => $ex,
                     'cvv'               => $post['cvc']
                 ]);
 
