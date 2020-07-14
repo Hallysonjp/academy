@@ -86,76 +86,139 @@ class Payment_model extends CI_Model {
     }
 
     // VALIDATE PAGAR.ME PAYMENT
-    public function pagarme_payment($post = "", $public_key = "") {
+    public function pagarme_payment($post = "", $public_key = "", $payment_method = "credit_card") {
         require_once(APPPATH.'../vendor/autoload.php');
 
-
-
-        $pagarme = new PagarMe\Client($public_key, ['headers' => ['verify' => "c:/certs/cacert.pem"]]);
-
+        $pagarme      = new PagarMe\Client($public_key);
         $user_details = $this->user_model->get_all_user($post['user_id'])->row_array();
+        $user_address = $this->user_model->has_address($post)->row_array();
 
-        $transaction = $pagarme->transactions()->create([
-            'amount'                => 123,
-            'payment_method'        => 'credit_card',
-            'card_holder_name'      => $post['card_holder_name'],
-            'card_cvv'              => $post['card_cvv'],
-            'card_number'           => $post['card_number'],
-            'card_expiration_date'  => $this->soNumero($post['card_expiration_date']),
+        $telefones = [];
+
+        if(!empty($user_details['celular'])){
+            array_push($telefones, '+55'.$this->soNumero($user_details['celular']));
+        }
+
+        if(!empty($user_details['telefone'])){
+            array_push($telefones, '+55'.$this->soNumero($user_details['telefone']));
+        }
+
+        $itens = []; $counter = 0;
+
+        foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
+            $counter++;
+            $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
+            $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
+
+            $itens[] = [
+                'id'         => $course_details['id'],
+                'title'      => $course_details['title'],
+                'unit_price' => ((int) $course_details['price'] * 100),
+                'quantity' => 1,
+                'tangible' => false
+            ];
+        }
+
+        $data = [
+            'amount' => (int) $post['amount'],
+            'payment_method' => $payment_method,
             'customer' => [
-                'external_id' => $post['user_id'],
-                'name' => $user_details['first_name']. " " .$user_details['last_name'],
+                'external_id' => $user_details['id'],
+                'name' => $user_details['first_name'] . " " . $user_details['last_name'],
+                'email' => $user_details['email'],
                 'type' => 'individual',
                 'country' => 'br',
                 'documents' => [
                     [
                         'type' => 'cpf',
-                        'number' => '55555555555'
+                        'number' => $this->soNumero($user_details['cpf'])
                     ]
                 ],
-                'phone_numbers' => [ '+551199999999' ],
-                'email' => 'cliente@email.com'
+                'phone_numbers' => $telefones
             ],
-            'items' => [
-                [
-                    'id' => '1',
-                    'title' => 'R2D2',
-                    'unit_price' => 300,
-                    'quantity' => 1,
-                    'tangible' => false
-                ],
-                [
-                    'id' => '2',
-                    'title' => 'C-3PO',
-                    'unit_price' => 700,
-                    'quantity' => 1,
-                    'tangible' => false
+            'billing' => [
+                'name' => $user_details['first_name'] . " " . $user_details['last_name'],
+                'address' => [
+                    'country' => 'br',
+                    'street' => $user_address['endereco'],
+                    'street_number' => $user_address['numero'],
+                    'state' => strtolower($user_address['estado']),
+                    'city' => $user_address['cidade'],
+                    'neighborhood' => $user_address['bairro'],
+                    'zipcode' => $this->soNumero($user_address['cep'])
                 ]
-            ]
+            ],
+            'items' => $itens
+        ];
+
+        if($payment_method == 'boleto'){
+            $data['postback_url'] = "https://portal.ladiesboss.com.br/academy/home/pagarme_postback";
+            $data['capture']      = true;
+            $data['async']        = false;
+        }else{
+            try{
+
+                $expiry     = $post['expiry'] ?? null;var_dump($expiry);
+                $arrayex    = explode(' / ', $expiry);
+                $yearExpiry = substr($arrayex[1], -2);
+
+                $ex         = $arrayex[0].$yearExpiry;
+
+                $card = $pagarme->cards()->create([
+                    'holder_name'       => $post['name'],
+                    'number'            => $post['number'],
+                    'expiration_date'   => $ex,
+                    'cvv'               => $post['cvc']
+                ]);
+
+                $data['installments'] = $post['parcelas'];
+                $data['card_id']      = $card->id;
+                $data['async']        = false;
+            }catch (\PagarMe\Exceptions\PagarMeException $e){
+                if($e->getType() == "invalid_parameter"){
+                    return [
+                        'status' => false,
+                        'message' => "Encontramos um erro no campo: ".$e->getParameterName()."\nO campo está vazio ou o formato é inválido."
+                    ];
+                }
+            }
+
+        }
+
+        try {
+            $transaction = $pagarme->transactions()->create($data);
+
+            if($transaction->status == 'paid'){
+                return ['status' => true];
+            } elseif ($payment_method == 'boleto'){
+                $this->session->set_userdata('transaction', $transaction);
+                redirect('home/pagarme_boleto');
+            } else {
+                return ['status' => false];
+            }
+        }catch (\PagarMe\Exceptions\PagarMeException $e){
+            return [
+                'status' => false,
+                'message' => 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente'
+            ];
+        }
+
+
+    }
+
+    public function checkar_taxa_juros($publicKey, $data = null){
+        require_once(APPPATH.'../vendor/autoload.php');
+
+        $pagarme = new PagarMe\Client($publicKey);
+
+        $calculateInstallments = $pagarme->transactions()->calculateInstallments([
+            'amount' => 99700,
+            'free_installments' => 1,
+            'max_installments' => 12,
+            'interest_rate' => 5
         ]);
 
-        $tr = json_encode($transaction);
-
-        echo $tr;
-
-
-        die();
-        require_once(APPPATH.'libraries/Stripe/init.php');
-        \Stripe\Stripe::setApiKey($stripe_secret_key);
-
-        $customer = \Stripe\Customer::create(array(
-            'email' => $user_details['email'], // client email id
-            'card'  => $token_id
-        ));
-
-        $charge = \Stripe\Charge::create(['customer'  => $customer->id, 'amount' => $amount_paid*100, 'currency' => get_settings('stripe_currency'), 'receipt_email' => $user_details['email']]);
-
-        if($charge->status == 'succeeded'){
-            return true;
-        }else {
-            $this->session->set_flashdata('error_message', get_phrase('an_error_occurred_during_payment'));
-            redirect('home', 'refresh');
-        }
+        return $calculateInstallments;
     }
 
     public function soNumero($str) {

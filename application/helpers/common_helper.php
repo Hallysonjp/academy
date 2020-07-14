@@ -276,6 +276,11 @@ if (! function_exists('phpFileUploadErrors')) {
     }
 }
 
+if (! function_exists('valueFormat')) {
+    function valueFormat($valor) {
+        return number_format(($valor / 100), '2', ",", '.');
+    }
+}
 
 
 // ------------------------------------------------------------------------

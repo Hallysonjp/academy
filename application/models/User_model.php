@@ -23,6 +23,13 @@ class User_model extends CI_Model {
         return $this->db->get('users');
     }
 
+    public function get_user_by_email($email = null) {
+
+        $this->db->where('email', $email);
+        $this->db->where('role_id', 2);
+        return $this->db->get('users');
+    }
+
     public function get_all_user($user_id = 0) {
         if ($user_id > 0) {
             $this->db->where('id', $user_id);
@@ -155,6 +162,73 @@ class User_model extends CI_Model {
     public function register_user($data) {
         $this->db->insert('users', $data);
         return $this->db->insert_id();
+    }
+
+    public function update_user_data($data){
+        $updateData = [
+            'cpf'       => $data['cpf'] ?? null,
+            'telefone'  => $data['telefone'] ?? null,
+            'celular'   => $data['celular'] ?? null
+        ];
+
+        $this->db->where('id', $data['user_id']);
+        $this->db->update('users', $updateData);
+        $this->session->set_flashdata('flash_message', 'Dados atualizados.');
+    }
+
+    public function insert_user_address($data){
+
+        $dados = [
+            'user_id'     => $data['user_id'],
+            'endereco'    => $data['endereco'],
+            'numero'      => $data['numero'],
+            'complemento' => $data['complemento'],
+            'cep'         => $data['cep'],
+            'bairro'      => $data['bairro'],
+            'cidade'      => $data['cidade'],
+            'estado'      => $data['estado'],
+            'pais'        => $data['pais'],
+        ];
+
+        $this->db->insert('user_address', $dados);
+        $address_id = $this->db->insert_id();
+    }
+
+    public function add_user_checkout($dados = null) {
+
+        $data['first_name']      = $dados['first_name'];
+        $data['last_name']       = $dados['last_name'];
+        $data['email']           = $dados['email'];
+        $data['password']        = sha1(html_escape($dados['password']));
+        $data['cpf']             = $dados['cpf'];
+        $social_link['facebook'] = '#';
+        $social_link['twitter']  = '#';
+        $social_link['linkedin'] = '#';
+        $data['social_links']    = json_encode($social_link);
+        $data['biography']       = null;
+        $data['role_id']         = 2;
+        $data['date_added']      = strtotime(date("Y-m-d H:i:s"));
+        $data['wishlist']        = json_encode([]);
+        $data['watch_history']   = json_encode([]);
+        $data['status']          = 1;
+
+
+        $this->db->insert('users', $data);
+        $user_id = $this->db->insert_id();
+        $this->session->set_flashdata('flash_message', get_phrase('user_added_successfully'));
+
+
+        $this->session->set_userdata('user_id', $user_id);
+        $this->session->set_userdata('role_id', 2);
+        $this->session->set_userdata('role', get_user_role('user_role', $user_id));
+        $this->session->set_userdata('name', $data['first_name'].' ' .$data['last_name']);
+        $this->session->set_userdata('is_instructor', 0);
+
+        return $user_id;
+    }
+
+    public function has_address($data){
+        return $this->db->get_where('user_address', ['user_id' => $data['user_id']]);
     }
 
     public function my_courses($user_id = "") {
