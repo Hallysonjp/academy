@@ -812,13 +812,8 @@ class Crud_model extends CI_Model
     public function add_section($course_id)
     {
         $data['title'] = html_escape($this->input->post('title'));
-        if(!empty($this->input->post('date_to_activate'))){
-            $data['date_to_activate'] = $this->input->post('date_to_activate');
-            $data['active'] = 1;
-        }elseif (!empty($this->input->post('days_to_activate'))){
-            $data['days_to_activate'] = $this->input->post('days_to_activate');
-            $data['active'] = 1;
-        }
+        $data['date_to_activate'] = empty($this->input->post('date_to_activate')) ? null : $this->input->post('date_to_activate');
+        $data['days_to_activate'] = $this->input->post('days_to_activate');
         $data['course_id'] = $course_id;
         $this->db->insert('section', $data);
         $section_id = $this->db->insert_id();
