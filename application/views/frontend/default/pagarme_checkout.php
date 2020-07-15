@@ -263,10 +263,6 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-sm-4">
-                                    <input type="text" readonly class="form-control" id="valor" name="valor" value="R$ <?= $valor ?>">
-                                    <input type="hidden" name="amount" id="amount" value="<?= $amount_to_pay * 100 ?>">
-                                </div>
 
                                 <div class="col-sm-4">
                                     <button class="btn btn-outline-primary btn-block mt-0" type="submit">Finalizar Pagamento</button>

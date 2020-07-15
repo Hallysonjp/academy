@@ -1012,4 +1012,10 @@ class Home extends CI_Controller {
             $this->load->view('mobile/index', $page_data);
         endif;
     }
+
+    // Mark this lesson as completed codes
+    function save_course_progress() {
+        $response = $this->crud_model->save_course_progress();
+        echo $response;
+    }
 }

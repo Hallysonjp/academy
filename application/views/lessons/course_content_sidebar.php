@@ -34,15 +34,57 @@
                     <!-- Lesson Content starts from here -->
                     <div class="accordion" id="accordionExample">
                         <?php
+                        $user = $this->crud_model->get_course_enrolled($course_id, $this->session->userdata('user_id'));
+
+                        $timestamp = $user['date_added'];
+                        $datetimeFormat = 'Y-m-d';
+
+                        $date = new \DateTime();
+                        $date->setTimestamp($timestamp);
+                        $date_added = $date->format($datetimeFormat);
+
+
                         foreach ($sections as $key => $section):
+                            if(!empty($section['days_to_activate'])){
+                                $date_compare = date('Y-m-d', strtotime('+' . $section['days_to_activate'] . ' days', strtotime($date_added)));
+                                $daysLeft     = (strtotime($date_compare) - strtotime(date('Y-m-d'))) / 86400;
+                            }
+                            $dia = null;
                             $lessons = $this->crud_model->get_lessons('section', $section['id'])->result_array();?>
                             <div class="card" style="margin:0px 0px;">
                                 <div class="card-header course_card" id="<?php echo 'heading-'.$section['id']; ?>">
-
                                     <h5 class="mb-0">
-                                        <button class="btn btn-link w-100 text-left" type="button" data-toggle="collapse" data-target="<?php echo '#collapse-'.$section['id']; ?>" <?php if($opened_section_id == $section['id']): ?> aria-expanded="true" <?php else: ?> aria-expanded="false" <?php endif; ?> aria-controls="<?php echo 'collapse-'.$section['id']; ?>" style="color: #535a66; background: none; border: none; white-space: normal;" onclick = "toggleAccordionIcon(this, '<?php echo $section['id']; ?>')">
+                                        <button
+                                                class="btn btn-link w-100 text-left"
+                                                type="button" data-toggle="collapse"
+                                                data-target="<?php echo '#collapse-'.$section['id']; ?>"
+                                            <?php if($opened_section_id == $section['id']): ?>
+                                                aria-expanded="true"
+                                            <?php else: ?>
+                                                aria-expanded="false"
+                                            <?php endif; ?>
+                                                aria-controls="<?php echo 'collapse-'.$section['id']; ?>"
+                                                style="color: #535a66; background: none; border: none; white-space: normal;" onclick = "toggleAccordionIcon(this, '<?php echo $section['id']; ?>')"
+                                            <?php if(!empty($section['date_to_activate']) &&
+                                                strtotime(date('Y-m-d')) < strtotime($section['date_to_activate'])) : ?>
+                                                disabled="disabled"
+                                            <?php elseif(!empty($section['days_to_activate']) &&
+                                                strtotime(date('Y-m-d')) < strtotime($date_compare)): ?>
+                                                disabled="disabled"
+                                            <?php endif; ?>
+                                        >
                                             <h6 style="color: #959aa2; font-size: 13px;">
-                                                <?php echo get_phrase('section').' '.($key+1);?>
+                                                <?php echo get_phrase('section').' '.($key+1); ?>
+                                                <?php if(!empty($section['date_to_activate'])): ?>
+                                                    <?= " - Esta seção estará ativa a partir de: ".date('d/m/Y', strtotime($section['date_to_activate'])); ?>
+                                                <?php elseif (!empty($section['days_to_activate'])):
+                                                    if($daysLeft > 0){
+                                                        $dia = $daysLeft == 1 ? ' dia' : ' dias';
+                                                        echo " - Esta seção estará ativa em ". $daysLeft. $dia;
+                                                    }elseif ($daysLeft <= 0){
+                                                        echo "";
+                                                    }
+                                                 endif; ?>
                                                 <span style="float: right; font-weight: 100;" class="accordion_icon" id="accordion_icon_<?php echo $section['id']; ?>">
                                                     <?php if($opened_section_id == $section['id']): ?>
                                                         <i class="fa fa-minus"></i>

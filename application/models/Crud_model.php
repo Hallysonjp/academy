@@ -812,6 +812,8 @@ class Crud_model extends CI_Model
     public function add_section($course_id)
     {
         $data['title'] = html_escape($this->input->post('title'));
+        $data['date_to_activate'] = empty($this->input->post('date_to_activate')) ? null : $this->input->post('date_to_activate');
+        $data['days_to_activate'] = $this->input->post('days_to_activate');
         $data['course_id'] = $course_id;
         $this->db->insert('section', $data);
         $section_id = $this->db->insert_id();
@@ -836,6 +838,9 @@ class Crud_model extends CI_Model
     public function edit_section($section_id)
     {
         $data['title'] = $this->input->post('title');
+        $data['date_to_activate'] = empty($this->input->post('date_to_activate')) ? null : $this->input->post('date_to_activate');
+        $data['days_to_activate'] = $this->input->post('days_to_activate');
+
         $this->db->where('id', $section_id);
         $this->db->update('section', $data);
     }
@@ -2310,6 +2315,9 @@ class Crud_model extends CI_Model
                         return $this->db->get_where('enrol', array('course_id' => $course_id, 'user_id' => $user_id))->num_rows();
                     }
 
+                    function get_course_enrolled($course_id = "", $user_id = ""){
+                        return $this->db->get_where('enrol', array('course_id' => $course_id, 'user_id' => $user_id))->row_array();
+                    }
 
                     // GET PAYOUTS
                     public function get_payouts($id = "", $type = "") {

@@ -21,6 +21,11 @@ $sections = $this->crud_model->get_section('course', $course_id)->result_array()
                 <div class="card bg-light text-seconday on-hover-action mb-5" id = "section-<?php echo $section['id']; ?>">
                     <div class="card-body">
                         <h5 class="card-title" class="mb-3" style="min-height: 45px;"><span class="font-weight-light"><?php echo get_phrase('section').' '.++$key; ?></span>: <?php echo $section['title']; ?>
+                            <?php if(!empty($section['date_to_activate'])): ?>
+                            - Esta seção estará ativa a partir de: <?php echo date('d/m/Y', strtotime($section['date_to_activate'])); ?>
+                            <?php elseif(!empty($section['days_to_activate'])): ?>
+                            - Esta seção estará ativa em <?= $section['days_to_activate']; ?> dias após o registro do aluno ao curso.
+                            <?php endif; ?>
                             <div class="row justify-content-center alignToTitle float-right display-none" id = "widgets-of-section-<?php echo $section['id']; ?>">
                                 <button type="button" class="btn btn-outline-secondary btn-rounded btn-sm" name="button" onclick="showLargeModal('<?php echo site_url('modal/popup/sort_lesson/'.$section['id']); ?>', '<?php echo get_phrase('sort_lessons'); ?>')" ><i class="mdi mdi-sort-variant"></i> <?php echo get_phrase('sort_lesson'); ?></button>
                                 <button type="button" class="btn btn-outline-secondary btn-rounded btn-sm ml-1" name="button" onclick="showAjaxModal('<?php echo site_url('modal/popup/section_edit/'.$section['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_section'); ?>')" ><i class="mdi mdi-pencil-outline"></i> <?php echo get_phrase('edit_section'); ?></button>
