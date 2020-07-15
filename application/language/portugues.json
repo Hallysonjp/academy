@@ -602,5 +602,21 @@
     "verify_email_address": "Verify email address",
     "your_registration_has_been_successfully_done": "Your registration has been successfully done",
     "please_check_your_mail_inbox_to_verify_your_email_address": "Please check your mail inbox to verify your email address",
-    "register_yourself": "Register yourself"
+    "register_yourself": "Register yourself",
+    "become_an_instructor": "Become an instructor",
+    "instructor_application_form": "Instructor application form",
+    "your_name_will_go_here": "Your name will go here",
+    "your_name_is_required": "Your name is required",
+    "email_address": "Email address",
+    "your_email_will_go_here": "Your email will go here",
+    "your_email_is_required": "Your email is required",
+    "your_address_is_required": "Your address is required",
+    "phone_number": "Phone number",
+    "your_phone_number_will_go_here": "Your phone number will go here",
+    "your_phone_number_is_required": "Your phone number is required",
+    "any_message": "Any message",
+    "if_any_message_you_want_to_share": "If any message you want to share",
+    "if_any_document_you_want_to_share": "If any document you want to share",
+    "are_accepted": "Are accepted",
+    "apply": "Apply"
 }

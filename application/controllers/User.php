@@ -577,7 +577,7 @@ class User extends CI_Controller {
     }
 
     // Mark this lesson as completed codes
-    function save_course_progress() {
+    function save_course_progress() {die('aqui');
         $response = $this->crud_model->save_course_progress();
         echo $response;
     }
