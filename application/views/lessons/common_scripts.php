@@ -17,7 +17,7 @@ function markThisLessonAsCompleted(lesson_id) {
   }
   $.ajax({
     type : 'POST',
-    url : '<?php echo site_url('user/save_course_progress'); ?>',
+    url : '<?php echo site_url('home/save_course_progress'); ?>',
     data : {lesson_id : lesson_id, progress : progress},
     success : function(response){
       currentProgress = response;
