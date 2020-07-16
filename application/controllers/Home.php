@@ -440,7 +440,7 @@ class Home extends CI_Controller {
             $public_key = $values[0]->api_key;
             $secret_key = $values[0]->encrypted_key;
         } else {
-            $public_key = $values[0]->api_live_key;
+            $public_key = $values[0]->public_live_key;
             $secret_key = $values[0]->encrypted_live_key;
         }
 
