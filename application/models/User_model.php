@@ -15,11 +15,15 @@ class User_model extends CI_Model {
         return $this->db->get_where('users', array('role_id' => 1));
     }
 
-    public function get_user($user_id = 0) {
+    public function get_user($user_id = 0, $order = null) {
         if ($user_id > 0) {
             $this->db->where('id', $user_id);
         }
         $this->db->where('role_id', 2);
+
+        if($order){
+            $this->db->order_by('id', 'DESC');
+        }
         return $this->db->get('users');
     }
 
