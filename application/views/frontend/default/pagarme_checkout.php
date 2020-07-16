@@ -41,7 +41,7 @@ if ($values[0]->testmode == 'on') {
     $public_key  = $values[0]->api_key;
     $private_key = $values[0]->encrypted_key;
 } else {
-    $public_key  = $values[0]->api_live_key;
+    $public_key  = $values[0]->public_live_key;
     $private_key = $values[0]->encrypted_live_key;
 }
 $parcelas = $this->payment_model->checkar_taxa_juros($public_key);

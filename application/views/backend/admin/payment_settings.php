@@ -244,7 +244,7 @@ $pagarme = json_decode($pagarme_settings);
 
                         <div class="form-group">
                             <label><?php echo get_phrase('live_api_key'); ?></label>
-                            <input type="text" name="secret_live_key" class="form-control" value="<?php echo $pagarme[0]->secret_api_key;?>" required />
+                            <input type="text" name="public_live_key" class="form-control" value="<?php echo $pagarme[0]->public_live_key;?>" required />
                         </div>
 
                         <div class="form-group">
