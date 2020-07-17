@@ -744,8 +744,7 @@ class Crud_model extends CI_Model
             }
         }
 
-        exit;
-
+        $this->session->set_flashdata('flash_message', 'Curso clonado com sucesso!');
     }
 
     public function add_section_clone($course_id, $section)
