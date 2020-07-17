@@ -441,7 +441,7 @@ class Home extends CI_Controller {
             $secret_key = $values[0]->encrypted_key;
         } else {
             $public_key = $values[0]->public_live_key;
-            $secret_key = $values[0]->encrypted_live_key;
+            $secret_key = $values[0]->secret_live_key;
         }
 
         if(empty($this->session->userdata('user_login'))){

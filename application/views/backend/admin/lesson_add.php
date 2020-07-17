@@ -20,7 +20,7 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
         ?>.
     </strong>
 
-    <strong><a href="#" class="ml-1" data-toggle="modal" data-dismiss="modal" onclick="showAjaxModal('<?php echo site_url('modal/popup/lesson_types/'.$param2.'/'.$param3); ?>', '<?php echo get_phrase('add_new_lesson'); ?>')"><?php echo get_phrase("change"); ?></a></strong>
+    <strong><a href="#" class="ml-1" data-toggle="modal" data-dismiss="modal" onclick="showLargeModal('<?php echo site_url('modal/popup/lesson_types/'.$param2.'/'.$param3); ?>', '<?php echo get_phrase('add_new_lesson'); ?>')"><?php echo get_phrase("change"); ?></a></strong>
 </div>
 
 <!-- ACTUAL LESSON ADDING FORM -->
@@ -51,13 +51,16 @@ $sections = $this->crud_model->get_section('course', $param2)->result_array();
 
     <div class="form-group">
         <label><?php echo get_phrase('summary'); ?></label>
-        <textarea name="summary" class="form-control"></textarea>
+        <textarea name="summary" id="summernote" class="form-control"></textarea>
     </div>
 
     <div class="text-center">
         <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('add_lesson'); ?></button>
     </div>
 </form>
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -68,6 +71,8 @@ $(document).ready(function() {
     $('select').select2({
         minimumResultsForSearch: -1
     });
+
+    $('#summernote').summernote();
 });
 function ajax_get_video_details(video_url) {
     $('#perloader').show();

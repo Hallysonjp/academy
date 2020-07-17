@@ -57,6 +57,6 @@
 <script type="text/javascript">
 function showLessonAddModal() {
     var url = "<?php echo site_url('modal/popup/lesson_add/'.$param2); ?>/"+$("input[name=lesson_type]:checked").val();
-    showAjaxModal(url, '<?php echo get_phrase('add_new_lesson'); ?>');
+    showLargeModal(url, '<?php echo get_phrase('add_new_lesson'); ?>');
 }
 </script>
