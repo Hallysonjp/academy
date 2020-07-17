@@ -719,6 +719,88 @@ class Crud_model extends CI_Model
         $this->db->delete('lesson', $lesson_checker);
     }
 
+    public function clone_course($course_id)
+    {
+        $course      = $this->db->get_where('course', ['id' => $course_id])->row_array();
+        $dadosInsert = [];
+        foreach ($course as $key => $curso){
+            if($key != 'id'){
+                $dadosInsert[$key] = $curso;
+                if($key == 'title'){
+                    $dadosInsert[$key] = "(Clone) " . $curso;
+                }
+            }
+        }
+
+        $this->db->insert('course', $dadosInsert);
+        $clone_id = $this->db->insert_id();
+
+        $oldSections = $this->db->get_where('section', ['course_id' => $course_id])->result_array();
+        foreach ($oldSections as $section){
+            $section_id = $this->add_section_clone($clone_id, $section);
+            $lessons = $this->get_lessons('section', $section['id'])->result_array();
+            foreach ($lessons as $lesson) {
+                $this->add_lesson_clone($clone_id, $section_id, $lesson);
+            }
+        }
+
+        exit;
+
+    }
+
+    public function add_section_clone($course_id, $section)
+    {
+        $data['title']            = $section['title'];
+        $data['date_to_activate'] = empty($section['date_to_activate']) ? null : $section['date_to_activate'];
+        $data['days_to_activate'] = $section['days_to_activate'];
+        $data['order']            = $section['order'];
+        $data['course_id'] = $course_id;
+        $this->db->insert('section', $data);
+        $section_id = $this->db->insert_id();
+
+        $course_details = $this->get_course_by_id($course_id)->row_array();
+        $previous_sections = json_decode($course_details['section']);
+
+        if (sizeof($previous_sections) > 0) {
+            array_push($previous_sections, $section_id);
+            $updater['section'] = json_encode($previous_sections);
+            $this->db->where('id', $course_id);
+            $this->db->update('course', $updater);
+        } else {
+            $previous_sections = array();
+            array_push($previous_sections, $section_id);
+            $updater['section'] = json_encode($previous_sections);
+            $this->db->where('id', $course_id);
+            $this->db->update('course', $updater);
+        }
+
+        return $section_id;
+    }
+
+    public function add_lesson_clone($course_id, $section_id, $dataLesson)
+    {
+        $data['course_id']       = $course_id;
+        $data['section_id']      = $section_id;
+        $data['title']           = $dataLesson['title'];
+        $data['attachment_type'] = $dataLesson['attachment_type'];
+        $data['attachment']      = $dataLesson['attachment'];
+        $data['lesson_type']     = $dataLesson['lesson_type'];
+        $data['duration']        = $dataLesson['duration'];
+        $data['video_type']      = $dataLesson['video_type'];
+        $data['video_url']       = $dataLesson['video_url'];
+        $data['summary']         = $dataLesson['summary'];
+        $data['order']           = $dataLesson['order'];
+
+        $data['video_type_for_mobile_application'] = $dataLesson['video_type_for_mobile_application'];
+        $data['video_url_for_mobile_application']  = $dataLesson['video_url_for_mobile_application'];
+        $data['duration_for_mobile_application']   = $dataLesson['duration_for_mobile_application'];
+
+        $data['date_added'] = strtotime(date('D, d-M-Y'));
+
+        $this->db->insert('lesson', $data);
+        $this->db->insert_id();
+    }
+
     public function get_top_courses()
     {
         return $this->db->get_where('course', array('is_top_course' => 1, 'status' => 'active'));

@@ -590,8 +590,8 @@ class Admin extends CI_Controller {
                 }
 
 
-
                 $delete_course_url = "confirm_modal('".site_url('admin/course_actions/delete/'.$row->id)."')";
+                $clone_course_url  = "confirm_modal('".site_url('admin/course_actions/clone/'.$row->id)."')";
 
                 $action = '
                 <div class="dropright dropright">
@@ -604,6 +604,7 @@ class Admin extends CI_Controller {
                 <li><a class="dropdown-item" href="'.$section_and_lesson_url.'">'.get_phrase("section_and_lesson").'</a></li>
                 <li><a class="dropdown-item" href="javascript::" onclick="'.$course_status_changing_action.'">'.$course_status_changing_message.'</a></li>
                 <li><a class="dropdown-item" href="javascript::" onclick="'.$delete_course_url.'">'.get_phrase("delete").'</a></li>
+                <li><a class="dropdown-item" href="javascript::" onclick="'.$clone_course_url.'">Clonar Curso</a></li>
                 </ul>
                 </div>
                 ';
@@ -678,6 +679,11 @@ class Admin extends CI_Controller {
         elseif ($param1 == 'delete') {
             $this->is_drafted_course($param2);
             $this->crud_model->delete_course($param2);
+            redirect(site_url('admin/courses'), 'refresh');
+        }
+        elseif ($param1 == 'clone') {
+            $this->is_drafted_course($param2);
+            $this->crud_model->clone_course($param2);
             redirect(site_url('admin/courses'), 'refresh');
         }
     }
