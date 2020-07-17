@@ -72,7 +72,7 @@ $(document).ready(function() {
         minimumResultsForSearch: -1
     });
 
-    $('#summernote').summernote();
+    $('#summernote').summernote({ height: 300});
 });
 function ajax_get_video_details(video_url) {
     $('#perloader').show();
