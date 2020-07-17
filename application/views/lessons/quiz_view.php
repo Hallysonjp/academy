@@ -28,7 +28,7 @@ $quiz_questions = $this->crud_model->get_quiz_questions($lesson_details['id']);
                                     foreach ($options as $key2 => $option): ?>
                                     <li class="list-group-item quiz-options">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="<?php echo $quiz_question['id']; ?>[]" value="<?php echo $key2+1; ?>" id="quiz-id-<?php echo $quiz_question['id']; ?>-option-id-<?php echo $key2+1; ?>" onclick="enableNextButton('<?php echo $quiz_question['id'];?>')">
+                                            <input class="form-check-input" type="radio" name="<?php echo $quiz_question['id']; ?>[]" value="<?php echo $key2+1; ?>" id="quiz-id-<?php echo $quiz_question['id']; ?>-option-id-<?php echo $key2+1; ?>" onclick="enableNextButton('<?php echo $quiz_question['id'];?>')">
                                             <label class="form-check-label" for="quiz-id-<?php echo $quiz_question['id']; ?>-option-id-<?php echo $key2+1; ?>">
                                                 <?php echo $option; ?>
                                             </label>
