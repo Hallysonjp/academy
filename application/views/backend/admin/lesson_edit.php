@@ -57,13 +57,16 @@ $sections = $this->crud_model->get_section('course', $param3)->result_array();
 
     <div class="form-group">
         <label><?php echo get_phrase('summary'); ?></label>
-        <textarea name="summary" class="form-control"><?php echo $lesson_details['summary']; ?></textarea>
+        <textarea name="summary" id="summernote" class="form-control"><?php echo $lesson_details['summary']; ?></textarea>
     </div>
 
     <div class="text-center">
         <button class = "btn btn-success" type="submit" name="button"><?php echo get_phrase('update_lesson'); ?></button>
     </div>
 </form>
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -74,6 +77,8 @@ $(document).ready(function() {
     $('select').select2({
         minimumResultsForSearch: -1
     });
+
+    $('#summernote').summernote({ height: 300});
 });
 
 function ajax_get_video_details(video_url) {

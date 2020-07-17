@@ -45,7 +45,7 @@ $sections = $this->crud_model->get_section('course', $course_id)->result_array()
                                             <a href="javascript::" onclick="showLargeModal('<?php echo site_url('modal/popup/quiz_questions/'.$lesson['id']); ?>', '<?php echo get_phrase('manage_quiz_questions'); ?>')"><i class="mdi mdi-comment-question-outline"></i></a>
                                             <a href="javascript::" onclick="showAjaxModal('<?php echo site_url('modal/popup/quiz_edit/'.$lesson['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_quiz_information'); ?>')"><i class="mdi mdi-pencil-outline"></i></a>
                                         <?php else: ?>
-                                            <a href="javascript::" onclick="showAjaxModal('<?php echo site_url('modal/popup/lesson_edit/'.$lesson['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_lesson'); ?>')"><i class="mdi mdi-pencil-outline"></i></a>
+                                            <a href="javascript::" onclick="showLargeModal('<?php echo site_url('modal/popup/lesson_edit/'.$lesson['id'].'/'.$course_id); ?>', '<?php echo get_phrase('update_lesson'); ?>')"><i class="mdi mdi-pencil-outline"></i></a>
                                         <?php endif; ?>
                                         <a href="javascript::" onclick="confirm_modal('<?php echo site_url('admin/lessons/'.$course_id.'/delete'.'/'.$lesson['id']); ?>');"><i class="mdi mdi-window-close"></i></a>
                                     </div>

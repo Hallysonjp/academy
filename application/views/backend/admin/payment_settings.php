@@ -249,7 +249,7 @@ $pagarme = json_decode($pagarme_settings);
 
                         <div class="form-group">
                             <label><?php echo get_phrase('live_encrypted_key'); ?></label>
-                            <input type="text" name="public_encrypted_key" class="form-control" value="<?php echo $pagarme[0]->live_encrypted_key;?>" required />
+                            <input type="text" name="secret_live_key" class="form-control" value="<?php echo $pagarme[0]->secret_live_key;?>" required />
                         </div>
 
                         <div class="row justify-content-md-center">

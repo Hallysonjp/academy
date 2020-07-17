@@ -50,7 +50,7 @@ if ($values[0]->testmode == 'on') {
     $private_key = $values[0]->encrypted_key;
 } else {
     $public_key  = $values[0]->public_live_key;
-    $private_key = $values[0]->encrypted_live_key;
+    $private_key = $values[0]->secret_live_key;
 }
 
 $dadosBoleto = $this->session->userdata('transaction');
