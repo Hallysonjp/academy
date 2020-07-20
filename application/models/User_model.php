@@ -119,6 +119,10 @@ class User_model extends CI_Model {
             if (isset($_POST['email'])) {
                 $data['email'] = html_escape($this->input->post('email'));
             }
+
+            if (isset($_POST['new_password'])){
+                $data['password'] = sha1(html_escape($this->input->post('new_password')));
+            }
             $social_link['facebook'] = html_escape($this->input->post('facebook_link'));
             $social_link['twitter'] = html_escape($this->input->post('twitter_link'));
             $social_link['linkedin'] = html_escape($this->input->post('linkedin_link'));
