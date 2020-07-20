@@ -18,7 +18,7 @@
 
                 <h4 class="header-title mb-3"><?php echo get_phrase('student_edit_form'); ?></h4>
 
-                <form class="required-form" action="<?php echo site_url('admin/users/edit/'.$user_id); ?>" enctype="multipart/form-data" method="post">
+                <form class="required-form" autocomplete="off" action="<?php echo site_url('admin/users/edit/'.$user_id); ?>" enctype="multipart/form-data" method="post">
                     <div id="progressbarwizard">
                         <ul class="nav nav-pills nav-justified form-wizard-header mb-3">
                             <li class="nav-item">
@@ -31,6 +31,12 @@
                                 <a href="#login_credentials" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                     <i class="mdi mdi-lock mr-1"></i>
                                     <span class="d-none d-sm-inline"><?php echo get_phrase('login_credentials'); ?></span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#new_password" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-lock mr-1"></i>
+                                    <span class="d-none d-sm-inline">Nova Senha</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -108,6 +114,19 @@
                                             <label class="col-md-3 col-form-label" for="email"> <?php echo get_phrase('email'); ?> <span class="required">*</span> </label>
                                             <div class="col-md-9">
                                                 <input type="email" id="email" name="email" class="form-control" value="<?php echo $user_data['email']; ?>" required>
+                                            </div>
+                                        </div>
+                                    </div> <!-- end col -->
+                                </div> <!-- end row -->
+                            </div>
+
+                            <div class="tab-pane" id="new_password">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="new_password"> Nova Senha <span class="required">*</span> </label>
+                                            <div class="col-md-9">
+                                                <input type="password" id="new_password" name="new_password" class="form-control">
                                             </div>
                                         </div>
                                     </div> <!-- end col -->
