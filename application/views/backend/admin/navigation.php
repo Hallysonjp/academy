@@ -146,12 +146,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 			</li>
 		<?php endif; ?>
 
-		<li class="side-nav-item">
-			<a href="<?php echo site_url('admin/message'); ?>" class="side-nav-link <?php if ($page_name == 'message' || $page_name == 'message_new' || $page_name == 'message_read')echo 'active';?>">
-				<i class="dripicons-message"></i>
-				<span><?php echo get_phrase('message'); ?></span>
-			</a>
-		</li>
+<!--		<li class="side-nav-item">-->
+<!--			<a href="--><?php //echo site_url('admin/message'); ?><!--" class="side-nav-link --><?php //if ($page_name == 'message' || $page_name == 'message_new' || $page_name == 'message_read')echo 'active';?><!--">-->
+<!--				<i class="dripicons-message"></i>-->
+<!--				<span>--><?php //echo get_phrase('message'); ?><!--</span>-->
+<!--			</a>-->
+<!--		</li>-->
 
 		<li class="side-nav-item">
 			<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'addons' || $page_name == 'addon_add' || $page_name == 'available_addons'): ?> active <?php endif; ?>">
