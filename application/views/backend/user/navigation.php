@@ -56,12 +56,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 				</a>
 			</li>
 		<?php endif; ?>
-		<li class="side-nav-item">
-			<a href="<?php echo site_url('home/my_messages'); ?>" class="side-nav-link">
-				<i class="dripicons-mail"></i>
-				<span><?php echo get_phrase('message'); ?></span>
-			</a>
-		</li>
+<!--		<li class="side-nav-item">-->
+<!--			<a href="--><?php //echo site_url('home/my_messages'); ?><!--" class="side-nav-link">-->
+<!--				<i class="dripicons-mail"></i>-->
+<!--				<span>--><?php //echo get_phrase('message'); ?><!--</span>-->
+<!--			</a>-->
+<!--		</li>-->
 		<li class="side-nav-item">
 			<a href="<?php echo site_url(strtolower($this->session->userdata('role')).'/manage_profile'); ?>" class="side-nav-link">
 				<i class="dripicons-user"></i>
