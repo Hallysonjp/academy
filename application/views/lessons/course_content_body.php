@@ -141,11 +141,11 @@
                             $user_comment = $this->user_model->get_user($comment['user_id'])->row_array();
                 ?>
                 <div class="row border row-comment">
-                    <div class="col-md-2">
-                        <img src="<?php echo $this->user_model->get_user_image_url($comment['user_id']); ?>" width="100" alt="user-image" class="rounded-circle align-image-center">
+                    <div class="col-sm-12 col-lg-2 mx-auto text-center">
+                        <img src="<?php echo $this->user_model->get_user_image_url($comment['user_id']); ?>" width="50" alt="user-image" class="rounded-circle">
                         <p class="text-secondary text-center minutes"><?php echo $this->crud_model->tempo_corrido($comment['added_at']); ?></p>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-sm-12 col-lg-10 mx-auto">
                         <p>
                             <a class="float-left" href="#">
                                 <strong>
@@ -175,11 +175,11 @@
                 <div class="card card-inner">
                     <div class="card-body bg-white">
                         <div class="row border row-comment">
-                            <div class="col-md-2">
-                                <img src="<?php echo $this->user_model->get_user_image_url($reply['user_id']); ?>" width="100" alt="user-image" class="rounded-circle align-image-center-reply">
+                            <div class="col-sm-12 col-lg-2 mx-auto text-center">
+                                <img src="<?php echo $this->user_model->get_user_image_url($reply['user_id']); ?>" alt="user-image" class="rounded-circle card-img-top smallimg">
                                 <p class="text-secondary text-center minutes"><?php echo $this->crud_model->tempo_corrido($reply['added_at']); ?></p>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-sm-12 col-lg-10">
                                 <p><a href="#"><strong><?= $user_comment_reply['first_name'] . " " . $user_comment_reply['last_name'] ?></strong></a></p>
                                 <p><?= $reply['comment'] ?></p>
                             </div>
@@ -244,8 +244,14 @@
         border: 1px solid #F2F2F2;
     }
 
+    .smallimg {
+        width: 50px;
+        height: 50px;
+    }
+
     .minutes {
         font-size: 12px;
+        margin-top: 5px;
     }
 
     .btn-comment {
@@ -253,22 +259,12 @@
     }
 
     .row-comment {
-        padding: 10px;
+        padding: 5px;
         margin: 10px;
     }
 
-    .align-image-center {
-        margin-left: 50px;
-    }
-
-    .align-image-center-reply {
-        margin-left: 25px;
-    }
-
     .card-inner {
-        margin-left: 150px;
         background-color: #f1f1f1;
-        width: 88%;
     }
 
     .reply-box {
