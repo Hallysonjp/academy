@@ -476,7 +476,7 @@ class Admin extends CI_Controller {
 
     public function courses() {
 
-        var_dump($this->session->userdata());
+        var_dump($this->session->userdata());exit;
 
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
