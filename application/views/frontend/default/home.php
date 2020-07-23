@@ -72,7 +72,7 @@
                             <div class="course-box">
                                 <!-- <div class="course-badge position best-seller">Best seller</div> -->
                                 <div class="course-image">
-                                    <img src="<?php echo $this->crud_model->get_course_thumbnail_url($top_course['id']); ?>" alt="" class="img-fluid">
+                                    <img src="<?php echo $this->crud_model->get_course_thumbnail_url($top_course['id'])."?".time(); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="course-details">
                                     <h5 class="title"><?php echo $top_course['title']; ?></h5>
