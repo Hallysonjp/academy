@@ -651,8 +651,8 @@ class Crud_model extends CI_Model
         // } else{
         //     return $course_media_placeholders[$type.'_placeholder'];
         // }
-        if (file_exists('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg')) {
-            return base_url() . 'uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg';
+        if (file_exists('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg?'.time())) {
+            return base_url() . 'uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg?'.time();
         } else {
             return base_url() . $course_media_placeholders[$type . '_placeholder'];
         }
@@ -660,8 +660,8 @@ class Crud_model extends CI_Model
     public function get_lesson_thumbnail_url($lesson_id)
     {
 
-        if (file_exists('uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg'))
-        return base_url() . 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg';
+        if (file_exists('uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg?'.time()))
+        return base_url() . 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg?'.time();
         else
         return base_url() . 'uploads/thumbnails/thumbnail.png';
     }
