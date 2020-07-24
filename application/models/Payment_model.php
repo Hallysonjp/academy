@@ -186,7 +186,7 @@ class Payment_model extends CI_Model {
         }
 
         try {
-            var_dump($data);
+            var_dump($data);exit;
             $transaction = $pagarme->transactions()->create($data);
             var_dump($transaction);exit;
             if($transaction->status == 'paid'){
