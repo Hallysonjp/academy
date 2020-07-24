@@ -475,7 +475,7 @@ class Home extends CI_Controller {
             $this->session->set_flashdata('flash_message', 'Pagamento efetuado com sucesso!');
             $itens = $this->session->userdata('cart_items');
             $this->session->set_userdata('cart_items', []);
-            redirect('home/checkout_success/'.current($itens)['id'].'/'.$post['user_id'], 'refresh');
+            redirect('home/checkout_success/'.$post['course_id'].'/'.$post['user_id'], 'refresh');
         }else{
             $itens = $this->session->userdata('cart_items');
             $this->session->set_flashdata('error_message', $payment['message']. " - " .$payment['erro']);
