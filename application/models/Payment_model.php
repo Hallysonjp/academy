@@ -105,9 +105,6 @@ class Payment_model extends CI_Model {
 
         $itens = []; $counter = 0;
 
-
-        var_dump(count($this->session->userdata('cart_items')) > 0);
-
         if(count($this->session->userdata('cart_items')) > 0){
             foreach ($this->session->userdata('cart_items') as $key => $cart_item){
                 if(!empty($cart_item)){
@@ -127,7 +124,7 @@ class Payment_model extends CI_Model {
                 ];
             }
         }
-        exit;
+        var_dump($itens);exit;
         $data = [
             'amount' => (int) $post['amount'],
             'payment_method' => $payment_method,
