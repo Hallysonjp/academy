@@ -552,6 +552,31 @@ class Home extends CI_Controller {
         $this->load->view('lessons/index', $page_data);
     }
 
+    public function add_lesson_comment() {
+        $dados  = $this->input->post();
+        $result = $this->crud_model->add_lesson_comment($dados);
+
+        $course_details = $this->crud_model->get_course_by_id($dados['course_id'])->row_array();
+
+        if($result){
+            $this->session->set_flashdata('flash_message', 'Comentário adicionado com sucesso!');
+            redirect(site_url('home/lesson/'.rawurlencode(slugify($course_details['title'])).'/'.$course_details['id'].'/'.$dados['lesson_id']), 'refresh');
+
+        }
+    }
+
+    public function add_lesson_reply() {
+        $dados  = $this->input->post();
+        $result = $this->crud_model->add_lesson_comment($dados);
+
+        if($result){
+            $this->session->set_flashdata('flash_message', 'Comentário adicionado com sucesso!');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($result));
+        }
+    }
+
     public function my_courses_by_category() {
         $category_id = $this->input->post('category_id');
         $course_details = $this->crud_model->get_my_courses_by_category_id($category_id)->result_array();
