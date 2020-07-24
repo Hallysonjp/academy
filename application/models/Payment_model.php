@@ -105,6 +105,8 @@ class Payment_model extends CI_Model {
 
         $itens = []; $counter = 0;
 
+        var_dump($post);
+
         if(count($this->session->userdata('cart_items')) > 0){
             foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
                 $counter++;
