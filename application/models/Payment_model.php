@@ -105,25 +105,12 @@ class Payment_model extends CI_Model {
 
         $itens = []; $counter = 0;
 
-        var_dump(count($this->session->userdata('cart_items')));
 
         if(count($this->session->userdata('cart_items')) > 0){
             foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
                 $counter++;
-                $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
+                $course_details = $this->crud_model->get_course_by_id($cart_item ?? $post['course_id'])->row_array();
                 $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
-
-                $itens[] = [
-                    'id'         => $course_details['id'],
-                    'title'      => $course_details['title'],
-                    'unit_price' => ((int) $course_details['price'] * 100),
-                    'quantity' => 1,
-                    'tangible' => false
-                ];
-            }
-        }else{
-            if (!empty($post['course_id'])){
-                $course_details = $this->crud_model->get_course_by_id((int) $post['course_id'])->row_array();
 
                 $itens[] = [
                     'id'         => $course_details['id'],
