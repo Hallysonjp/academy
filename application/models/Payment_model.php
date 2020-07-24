@@ -106,10 +106,12 @@ class Payment_model extends CI_Model {
         $itens = []; $counter = 0;
 
 
+        var_dump(count($this->session->userdata('cart_items')) > 0);exit;
+
         if(count($this->session->userdata('cart_items')) > 0){
             foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
                 $counter++;
-                $course_details = $this->crud_model->get_course_by_id($cart_item ?? (int)$post['course_id'])->row_array();
+                $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
                 $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
 
                 $itens[] = [
@@ -121,8 +123,6 @@ class Payment_model extends CI_Model {
                 ];
             }
         }
-        var_dump($itens);
-
 
         $data = [
             'amount' => (int) $post['amount'],
@@ -191,9 +191,9 @@ class Payment_model extends CI_Model {
         }
 
         try {
-            var_dump($data);exit;
+
             $transaction = $pagarme->transactions()->create($data);
-            var_dump($transaction);exit;
+
             if($transaction->status == 'paid'){
                 return ['status' => true];
             } elseif ($payment_method == 'boleto'){
