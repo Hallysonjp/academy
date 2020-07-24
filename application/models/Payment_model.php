@@ -106,10 +106,11 @@ class Payment_model extends CI_Model {
         $itens = []; $counter = 0;
 
 
-        var_dump(count($this->session->userdata('cart_items')) > 0);exit;
+        var_dump(count($this->session->userdata('cart_items')) > 0);
 
         if(count($this->session->userdata('cart_items')) > 0){
-            foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
+            foreach ($this->session->userdata('cart_items') as $key => $cart_item){
+                var_dump($cart_item);
                 $counter++;
                 $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
                 $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
@@ -123,7 +124,7 @@ class Payment_model extends CI_Model {
                 ];
             }
         }
-
+        exit;
         $data = [
             'amount' => (int) $post['amount'],
             'payment_method' => $payment_method,
