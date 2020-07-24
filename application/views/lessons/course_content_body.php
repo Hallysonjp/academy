@@ -127,4 +127,148 @@
                 </div>
             </div>
         </div>
+    <?php
+        $lesson_comments = $this->crud_model->get_lesson_comments($lesson_id, $lesson_details['course_id'])->result_array();
+        if(!empty($lesson_comments)):
+    ?>
+    <div class="" style="margin: 20px 0;" id="comments">
+        <div class="card">
+            <div class="card-body">
+                <?php
+
+                    foreach ($lesson_comments as $comment):
+                        if (empty($comment['parent_lesson_id'])):
+                            $user_comment = $this->user_model->get_user($comment['user_id'])->row_array();
+                ?>
+                <div class="row border row-comment">
+                    <div class="col-sm-12 col-lg-2 mx-auto text-center">
+                        <img src="<?php echo $this->user_model->get_user_image_url($comment['user_id']); ?>" width="50" alt="user-image" class="rounded-circle">
+                        <p class="text-secondary text-center minutes"><?php echo $this->crud_model->tempo_corrido($comment['added_at']); ?></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-10 mx-auto">
+                        <p>
+                            <a class="float-left" href="#">
+                                <strong>
+                                    <?= $user_comment['first_name'] . " " . $user_comment['last_name'] ?>
+                                </strong>
+                            </a>
+                            <!--<span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>-->
+
+                        </p>
+                        <div class="clearfix"></div>
+                        <p><?= $comment['comment'] ?></p>
+                        <p>
+                            <a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>
+                        <div class="reply-box" id="reply-box-<?php echo $comment['id']; ?>"></div>
+                        <!--<a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>-->
+                        </p>
+                    </div>
+                </div>
+                <?php
+                    $lesson_comments_reply = $this->crud_model->get_lesson_comments_reply($lesson_id, $lesson_details['course_id'], $comment['id'])->result_array();
+                    foreach ($lesson_comments_reply as $reply):
+                    $user_comment_reply = $this->user_model->get_user($reply['user_id'])->row_array();
+                ?>
+                <div class="card card-inner">
+                    <div class="card-body bg-white">
+                        <div class="row border row-comment">
+                            <div class="col-sm-12 col-lg-2 mx-auto text-center">
+                                <img src="<?php echo $this->user_model->get_user_image_url($reply['user_id']); ?>" alt="user-image" class="rounded-circle card-img-top smallimg">
+                                <p class="text-secondary text-center minutes"><?php echo $this->crud_model->tempo_corrido($reply['added_at']); ?></p>
+                            </div>
+                            <div class="col-sm-12 col-lg-10">
+                                <p><a href="#"><strong><?= $user_comment_reply['first_name'] . " " . $user_comment_reply['last_name'] ?></strong></a></p>
+                                <p><?= $reply['comment'] ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; endif; endforeach; ?>
+            </div>
+        </div>
     </div>
+    <?php endif; ?>
+    <div class="" style="margin: 20px 0;" id="comments">
+        <div class="card">
+            <div class="card-body">
+                <?php
+                echo form_open(site_url('home/add_lesson_comment') , ['class' => 'form-inline form-groups-bordered validate','target'=>'_top']);
+                echo form_input([
+                    'type'  => 'hidden',
+                    'name'  => 'lesson_id',
+                    'id'    => 'hidden-lesson-id',
+                    'value' => $lesson_id
+                ]);
+                echo form_input([
+                    'type'  => 'hidden',
+                    'name'  => 'course_id',
+                    'id'    => 'hidden-course-id',
+                    'value' => $lesson_details['course_id']
+                ]);
+                echo form_input([
+                    'type'  => 'hidden',
+                    'name'  => 'user_id',
+                    'id'    => 'hidden-user-id',
+                    'value' => $this->session->userdata('user_id')
+                ]);
+                echo form_input([
+                    'type'  => 'hidden',
+                    'name'  => 'url-reply',
+                    'id'    => 'url-reply',
+                    'value' =>  site_url('home/add_lesson_reply')
+                ]);
+                ?>
+                <textarea placeholder="Escreva um comentário!" name="comment" class="pb-cmnt-textarea"></textarea>
+                <button class="btn btn-primary pull-right btn-comment" type="submit">Comentar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+<style>
+    .pb-cmnt-container {
+        font-family: Lato;
+        margin-top: 100px;
+    }
+
+    .pb-cmnt-textarea {
+        resize: none;
+        padding: 20px;
+        height: 130px;
+        width: 100%;
+        border: 1px solid #F2F2F2;
+    }
+
+    .smallimg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .minutes {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .btn-comment {
+        margin-top: 15px;
+    }
+
+    .row-comment {
+        padding: 5px;
+        margin: 10px;
+    }
+
+    .card-inner {
+        background-color: #f1f1f1;
+    }
+
+    .reply-box {
+        margin-top: 10px;
+    }
+</style>
+</div>
