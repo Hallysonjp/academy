@@ -118,10 +118,6 @@ class Payment_model extends CI_Model {
                 'tangible' => false
             ];
         }
-        echo "<pre>";
-        var_dump($post);
-        echo "</pre>";
-
 
         $data = [
             'amount' => (int) $post['amount'],
@@ -188,7 +184,7 @@ class Payment_model extends CI_Model {
             }
 
         }
-        var_dump($transaction);exit;
+
         try {
             $transaction = $pagarme->transactions()->create($data);
 
