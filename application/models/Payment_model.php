@@ -104,7 +104,7 @@ class Payment_model extends CI_Model {
         }
 
         $itens = []; $counter = 0;
-
+        var_dump($this->session->userdata('cart_items'));
         foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
             $counter++;
             $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
@@ -118,6 +118,8 @@ class Payment_model extends CI_Model {
                 'tangible' => false
             ];
         }
+
+
 
         $data = [
             'amount' => (int) $post['amount'],
