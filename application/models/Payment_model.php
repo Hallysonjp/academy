@@ -122,6 +122,7 @@ class Payment_model extends CI_Model {
         var_dump($post);exit;
         echo "</pre>";
 
+
         $data = [
             'amount' => (int) $post['amount'],
             'payment_method' => $payment_method,
