@@ -158,7 +158,7 @@ class Payment_model extends CI_Model {
         }else{
             try{
 
-                $expiry     = $post['expiry'] ?? null;var_dump($expiry);
+                $expiry     = $post['expiry'] ?? null;
                 $arrayex    = explode(' / ', $expiry);
                 $yearExpiry = substr($arrayex[1], -2);
 
@@ -199,7 +199,8 @@ class Payment_model extends CI_Model {
         }catch (\PagarMe\Exceptions\PagarMeException $e){
             return [
                 'status' => false,
-                'message' => 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente'
+                'message' => 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente',
+                'erro' => $e->getMessage()
             ];
         }
 
