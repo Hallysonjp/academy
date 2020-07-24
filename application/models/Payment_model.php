@@ -132,7 +132,7 @@ class Payment_model extends CI_Model {
                 ];
             }
         }
-
+        var_dump($itens);
 
 
         $data = [
