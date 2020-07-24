@@ -657,7 +657,7 @@ class Crud_model extends CI_Model
         //     return $course_media_placeholders[$type.'_placeholder'];
         // }
         if (file_exists('uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg')) {
-            return base_url() . 'uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg';
+            return base_url() . 'uploads/thumbnails/course_thumbnails/' . $type . '_' . get_frontend_settings('theme') . '_' . $course_id . '.jpg?'.time();
         } else {
             return base_url() . $course_media_placeholders[$type . '_placeholder'];
         }
@@ -666,7 +666,7 @@ class Crud_model extends CI_Model
     {
 
         if (file_exists('uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg'))
-        return base_url() . 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg';
+        return base_url() . 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg?'.time();
         else
         return base_url() . 'uploads/thumbnails/thumbnail.png';
     }
@@ -1194,6 +1194,47 @@ class Crud_model extends CI_Model
                 move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $inserted_id . '.jpg');
             }
         }
+
+        public function add_lesson_comment($dados){
+            unset($dados['url-reply']);
+            return $this->db->insert('lesson_comments', $dados);
+        }
+
+        public function get_lesson_comments($lesson_id, $course_id){
+            return $this->db->get_where('lesson_comments', ['lesson_id' => $lesson_id, 'course_id' => $course_id]);
+        }
+
+        public function get_lesson_comments_reply($lesson_id, $course_id, $parent_lesson_id){
+            return $this->db->get_where('lesson_comments',
+                [
+                    'lesson_id'        => $lesson_id,
+                    'course_id'        => $course_id,
+                    'parent_lesson_id' => $parent_lesson_id
+                ]);
+        }
+
+    public function tempo_corrido($time) {
+
+        $now    = strtotime(date('Y-m-d H:i:s'));
+        $time   = strtotime(date($time));
+        $diff   = $now - $time;
+
+        $seconds = $diff;
+        $minutes = round($diff / 60);
+        $hours   = round($diff / 3600);
+        $days    = round($diff / 86400);
+        $weeks   = round($diff / 604800);
+        $months  = round($diff / 2419200);
+        $years   = round($diff / 29030400);
+
+        if ($seconds <= 60) return"1 min atrás";
+        else if ($minutes <= 60) return $minutes==1 ?'1 min atrás':$minutes.' min atrás';
+        else if ($hours <= 24) return $hours==1 ?'1 hora atrás':$hours.' horas atrás';
+        else if ($days <= 7) return $days==1 ?'1 dia atras':$days.' dias atrás';
+        else if ($weeks <= 4) return $weeks==1 ?'1 semana atrás':$weeks.' semanas atrás';
+        else if ($months <= 12) return $months == 1 ?'1 mês atrás':$months.' meses atrás';
+        else return $years == 1 ? 'um ano atrás':$years.' anos atrás';
+    }
 
         public function edit_lesson($lesson_id)
         {
