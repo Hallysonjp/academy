@@ -154,7 +154,8 @@ class Payment_model extends CI_Model {
                     'zipcode' => $this->soNumero($user_address['cep'])
                 ]
             ],
-            'items' => $itens
+            'items' => $itens,
+            'metadata' => json_encode(['itens' => $itens])
         ];
 
         if($payment_method == 'boleto'){
