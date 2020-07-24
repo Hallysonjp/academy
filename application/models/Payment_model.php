@@ -118,6 +118,10 @@ class Payment_model extends CI_Model {
                 'tangible' => false
             ];
         }
+        echo "<pre>";
+        var_dump($post);exit;
+        echo "</pre>";
+
 
         $data = [
             'amount' => (int) $post['amount'],
