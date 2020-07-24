@@ -70,6 +70,7 @@ $parcelas = $this->payment_model->checkar_taxa_juros($public_key);
     <form method="post" action="<?php echo site_url('home/pagarme_payment/');?>" name="myform">
         <input type="hidden" name="user_id" value="<?= $user_details['id'] ?? null ?>">
         <input type="hidden" name="amount" value="<?= $amount_to_pay * 100 ?>">
+        <input type="hidden" name="course_id" value="<?= $course_id ?>">
         <div class="row pt-4 mt-2">
         <div class="col-xl-9 col-md-8">
                 <h6 class="h6 px-4 py-3 bg-secondary mb-4">Dados do comprador</h6>
