@@ -477,7 +477,7 @@ class Home extends CI_Controller {
             redirect('home/checkout_success/'.current($itens)['id'].'/'.$post['user_id'], 'refresh');
         }else{
             $itens = $this->session->userdata('cart_items');
-            $this->session->set_flashdata('error_message', $payment['message']);
+            $this->session->set_flashdata('error_message', $payment['message']. " - " .$payment['erro']);
             redirect('home/checkout_direto/'.current($itens)['id']);
         }
     }
