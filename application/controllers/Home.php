@@ -474,7 +474,7 @@ class Home extends CI_Controller {
             $this->email_model->course_purchase_notification($post['user_id'], 'pagarme', $post['amount']);
             $this->session->set_flashdata('flash_message', 'Pagamento efetuado com sucesso!');
             $this->session->set_userdata('cart_items', []);
-            redirect('home/checkout_success', 'refresh');
+            redirect('home/checkout_success/'.current($itens)['id'].'/'.$post['user_id'], 'refresh');
         }else{
             $itens = $this->session->userdata('cart_items');
             $this->session->set_flashdata('error_message', $payment['message']);
@@ -486,8 +486,14 @@ class Home extends CI_Controller {
         log_message('error', var_dump($_POST));
     }
 
-    public function checkout_success(){
-        $this->load->view('frontend/'.get_frontend_settings('theme').'/checkout_success');
+    public function checkout_success($curso_id = 0, $user_id){
+        $curso = $this->crud_model->get_course_by_id($curso_id)->row_array();
+
+        $page_data['amount_to_pay']   = (int) $curso['price'];
+        $page_data['course_id']       = $curso['id'];
+        $page_data['course_title']    = $curso['title'];
+        $page_data['user_id']         = $user_id;
+        $this->load->view('frontend/'.get_frontend_settings('theme').'/checkout_success', $page_data);
     }
 
     public function pagarme_boleto(){
