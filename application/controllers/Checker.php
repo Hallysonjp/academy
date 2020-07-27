@@ -44,7 +44,7 @@ class Mobile extends CI_Controller
         $id       = $this->input->post('user_id');
         $response = array();
         if (file_exists('uploads/' . $type . '_image/' . $id . '.jpg'))
-            $response['image_url'] = base_url() . 'uploads/' . $type . '_image/' . $id . '.jpg';
+            $response['image_url'] = base_url() . 'uploads/' . $type . '_image/' . $id . '.jpg?'.time();
         else
             $response['image_url'] = base_url() . 'uploads/user.jpg';
         echo json_encode($response);
