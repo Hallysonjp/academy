@@ -238,13 +238,12 @@
             <div class="media flex-column flex-sm-row">
                 <div class="col-md-12 text-center mb-5 mt-3">
                     <h4>Seu pedido foi concluído com sucesso!</h4>
+                    <h6>O curso já está disponível</h6>
                 </div>
             </div>
             <div class="media flex-column flex-sm-row">
                 <div class="media-body ">
                     <h5 class="bold"><?= $course_title ?></h5>
-                    <p class="text-muted"> Qt: 1</p>
-                    <h4 class="mt-3 mb-4 bold"> <span class="mt-5">R$</span> <?= $valor ?> <span class="small text-muted"></span></h4>
                     <p class="text-muted">Via: <?= $payment_details['payment_type'] ?></p>
 <!--                    <button type="button" class="btn btn-outline-primary d-flex">Reached Hub, Delhi</button>-->
                 </div>
@@ -254,9 +253,15 @@
             </div>
         </div>
         <div class="card-footer bg-white px-sm-3 pt-sm-4 px-0">
-            <div class="row text-center ">
-                <a class="btn btn-secondary mt-3 mr-3" href="<?php echo base_url().'/home' ?>">Início</a><a class="btn btn-primary mt-3" href="<?= base_url().'/login' ?>"><i data-feather="map-pin"></i>&nbsp;Login</a>
+            <div class="row text-center col-md-12 text-center mb-5 mt-3">
+                <p class="text-muted text-center">Caso este seja o seu primeiro acesso, você poderá efetuar o Login utilizando seu e-mail e CPF como senha.</p>
+                <div style="margin: 0 auto; display: block">
+                    <a class="btn btn-secondary mt-3 mr-3" href="<?php echo base_url().'home' ?>">Início</a><a class="btn btn-primary mt-3" href="<?= base_url().'login' ?>"><i data-feather="map-pin"></i>&nbsp;Login</a>
+                </div>
             </div>
+
+
+
         </div>
     </div>
 </div>
