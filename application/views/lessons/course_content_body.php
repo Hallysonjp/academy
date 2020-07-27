@@ -137,7 +137,7 @@
                 <?php
 
                     foreach ($lesson_comments as $comment):
-                        if (empty($comment['parent_lesson_id'])):
+                        if (empty($comment['parent_lesson_id']) && $comment['status'] == 1):
                             $user_comment = $this->user_model->get_user($comment['user_id'])->row_array();
                 ?>
                 <div class="row border row-comment">
@@ -171,6 +171,7 @@
                     $lesson_comments_reply = $this->crud_model->get_lesson_comments_reply($lesson_id, $lesson_details['course_id'], $comment['id'])->result_array();
                     foreach ($lesson_comments_reply as $reply):
                     $user_comment_reply = $this->user_model->get_user($reply['user_id'])->row_array();
+                    if($user_comment_reply['status'] == 1):
                 ?>
                 <div class="card card-inner">
                     <div class="card-body bg-white">
@@ -186,7 +187,7 @@
                         </div>
                     </div>
                 </div>
-                <?php endforeach; endif; endforeach; ?>
+                <?php endif; endforeach; endif; endforeach; ?>
             </div>
         </div>
     </div>
@@ -227,7 +228,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 
 <style>

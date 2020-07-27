@@ -752,6 +752,20 @@ class Crud_model extends CI_Model
         $this->session->set_flashdata('flash_message', 'Curso clonado com sucesso!');
     }
 
+    public function get_moderations() {
+        return $this->db->get('vw_moderation');
+    }
+
+    public function approve_comment($commentId) {
+        $this->db->where('id', $commentId);
+        $this->db->update('lesson_comments', ['status' => 1]);
+    }
+
+    public function unapprove_comment($commentId) {
+        $this->db->where('id', $commentId);
+        $this->db->update('lesson_comments', ['status' => 2]);
+    }
+
     public function add_section_clone($course_id, $section)
     {
         $data['title']            = $section['title'];
