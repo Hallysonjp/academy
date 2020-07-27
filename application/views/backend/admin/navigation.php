@@ -87,6 +87,13 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 			</a>
 		</li>
 
+        <li class="side-nav-item">
+            <a href="<?php echo site_url('admin/moderation'); ?>" class="side-nav-link <?php if ($page_name == 'navigation')echo 'active';?>">
+                <i class="dripicons-thumbs-up"></i>
+                <span>Moderação</span>
+            </a>
+        </li>
+
 		<li class="side-nav-item <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student'): ?> active <?php endif; ?>">
 			<a href="javascript: void(0);" class="side-nav-link <?php if ($page_name == 'enrol_history' || $page_name == 'enrol_student'): ?> active <?php endif; ?>">
 				<i class="dripicons-network-3"></i>
