@@ -105,18 +105,24 @@ class Payment_model extends CI_Model {
 
         $itens = []; $counter = 0;
 
-        foreach ($this->session->userdata('cart_items') as $key =>$cart_item){
-            $counter++;
-            $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
-            $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
+        if(count($this->session->userdata('cart_items')) > 0){
+            foreach ($this->session->userdata('cart_items') as $key => $cart_item){
+                if(!empty($cart_item)){
+                    $counter++;
+                    $course_details = $this->crud_model->get_course_by_id($cart_item)->row_array();
+                    $instructor_details = $this->user_model->get_all_user($course_details['user_id'])->row_array();
+                }else{
+                    $course_details = $this->crud_model->get_course_by_id($post['course_id'])->row_array();
+                }
 
-            $itens[] = [
-                'id'         => $course_details['id'],
-                'title'      => $course_details['title'],
-                'unit_price' => ((int) $course_details['price'] * 100),
-                'quantity' => 1,
-                'tangible' => false
-            ];
+                $itens[] = [
+                    'id'         => $course_details['id'],
+                    'title'      => $course_details['title'],
+                    'unit_price' => ((int) $course_details['price'] * 100),
+                    'quantity' => 1,
+                    'tangible' => false
+                ];
+            }
         }
 
         $data = [
@@ -148,7 +154,8 @@ class Payment_model extends CI_Model {
                     'zipcode' => $this->soNumero($user_address['cep'])
                 ]
             ],
-            'items' => $itens
+            'items' => $itens,
+            'metadata' => json_encode(['itens' => $itens])
         ];
 
         if($payment_method == 'boleto'){
@@ -158,7 +165,7 @@ class Payment_model extends CI_Model {
         }else{
             try{
 
-                $expiry     = $post['expiry'] ?? null;var_dump($expiry);
+                $expiry     = $post['expiry'] ?? null;
                 $arrayex    = explode(' / ', $expiry);
                 $yearExpiry = substr($arrayex[1], -2);
 
@@ -186,6 +193,7 @@ class Payment_model extends CI_Model {
         }
 
         try {
+
             $transaction = $pagarme->transactions()->create($data);
 
             if($transaction->status == 'paid'){
@@ -199,7 +207,8 @@ class Payment_model extends CI_Model {
         }catch (\PagarMe\Exceptions\PagarMeException $e){
             return [
                 'status' => false,
-                'message' => 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente'
+                'message' => 'Ocorreu um erro durante o pagamento. Verifique os dados e tente novamente',
+                'erro' => $e->getMessage()
             ];
         }
 

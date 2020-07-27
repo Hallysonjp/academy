@@ -243,6 +243,11 @@ class Crud_model extends CI_Model
         }
     }
 
+    public function get_payment_details_by_user_course($user_id, $course_id)
+    {
+        return $this->db->get_where('payment', ['user_id' => $user_id, 'course_id' => $course_id])->row_array();;
+    }
+
     public function get_payment_details_by_id($payment_id = "")
     {
         return $this->db->get_where('payment', array('id' => $payment_id))->row_array();

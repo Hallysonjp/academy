@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" href="<?php echo base_url().'assets/frontend/default/css/bootstrap.min.css'; ?>">
 <link rel="stylesheet" href="<?php echo base_url().'assets/frontend/default/css/bootstrap-tagsinput.css'; ?>">
-<link rel="stylesheet" href="<?php echo base_url().'assets/frontend/default/css/main.css'; ?>">
+<link rel="stylesheet" href="<?php echo base_url().'assets/frontend/default/css/main.css?'.time(); ?>">
 <link rel="stylesheet" href="<?php echo base_url().'assets/frontend/default/css/responsive.css'; ?>">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo base_url().'assets/global/toastr/toastr.css' ?>">
