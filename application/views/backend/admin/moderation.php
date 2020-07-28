@@ -15,7 +15,7 @@
             <div class="card-body">
               <h4 class="mb-3 header-title">Moderação</h4>
               <div class="table-responsive-sm mt-4">
-                <table id="basic-datatable" class="table table-striped table-centered mb-0">
+                <table id="basic-datatable" class="table table-light table-centered mb-0">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -29,7 +29,9 @@
                   </thead>
                   <tbody>
                       <?php
-                       foreach ($moderation->result_array() as $key => $moderation): ?>
+                       foreach ($moderation->result_array() as $key => $moderation):
+                       if(empty($moderation['parent_lesson_id'])):
+                       ?>
                           <tr>
                               <td><?php echo $key+1; ?></td>
                               <td>
@@ -43,7 +45,7 @@
                               </td>
                               <td>
                                   <?= $moderation['email']; ?>
-                                  <small><p><?= $moderation['first_name'].' '.$moderation['last_name']; ?></p></small>
+                                  <p><small><?= $moderation['first_name'].' '.$moderation['last_name']; ?></small></p>
                               </td>
                               <td>
                                   <?php
@@ -74,7 +76,75 @@
                                 </div>
                               </td>
                           </tr>
-                      <?php endforeach; ?>
+                      <?php
+                       endif;
+                        $replies = $this->crud_model->get_moderations(true, $moderation['id'])->result_array();
+                        if(!empty($replies)):
+
+                      ?>
+                        <tr>
+                            <td><p>Resposta</p></td>
+
+                            <td colspan="6">
+                               <table class="table table-info">
+                                   <thead>
+                                   <tr>
+                                       <th>#</th>
+                                       <th>Comentário</th>
+                                       <th></th>
+                                       <th></th>
+                                       <th>Usuário</th>
+                                       <th>Status</th>
+                                       <th><?php echo get_phrase('actions'); ?></th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                        <?php foreach ($replies as $reply): ?>
+                                            <tr>
+                                                <td><?= $reply['id']; ?></td>
+                                                <td colspan="3">
+                                                    <?= $reply['comment'] ?>
+                                                </td>
+                                                <td width="100">
+                                                    <?= $reply['email']; ?>
+                                                    <p><small><?= $reply['first_name'].' '.$reply['last_name']; ?></small></p>
+                                                </td>
+                                                <td width="100">
+                                                    <?php
+                                                    $descricao = [
+                                                        0 => 'Aguardando',
+                                                        1 => 'Aprovado',
+                                                        2 => 'Reprovado'
+                                                    ];
+
+                                                    $status = [
+                                                        0 => 'warning',
+                                                        1 => 'success',
+                                                        2 => 'danger'
+                                                    ]
+                                                    ?>
+                                                    <small><p><span class="badge badge-<?= $status[$reply['status']] ?>-lighten"><?= $descricao[$reply['status']] ?></span></p></small>
+                                                </td>
+                                                <td width="50">
+                                                    <div class="dropright dropright">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary btn-rounded btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="mdi mdi-dots-vertical"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="<?php echo site_url('admin/moderation/approve/'.$reply['id']) ?>">Aprovar</a></li>
+                                                            <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/unapprove/'.$reply['id']); ?>');">Reprovar</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                   </tbody>
+                               </table>
+                            </td>
+
+
+                        </tr>
+                       <?php endif; endforeach; ?>
                   </tbody>
               </table>
               </div>

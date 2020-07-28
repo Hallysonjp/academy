@@ -196,9 +196,10 @@ class Admin extends CI_Controller {
             redirect(site_url('admin/moderation'), 'refresh');
         }
 
-        $page_data['page_name'] = 'moderation';
+        $page_data['page_name']  = 'moderation';
         $page_data['page_title'] = 'Moderação';
         $page_data['moderation'] = $this->crud_model->get_moderations();
+        $page_data['reply']      = $this->crud_model->get_moderations(true);
         $this->load->view('backend/index', $page_data);
     }
 

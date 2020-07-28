@@ -752,7 +752,10 @@ class Crud_model extends CI_Model
         $this->session->set_flashdata('flash_message', 'Curso clonado com sucesso!');
     }
 
-    public function get_moderations() {
+    public function get_moderations($reply = false, $lesson_id = null) {
+        if($reply) $this->db->where('parent_lesson_id IS NOT NULL', null, false);
+        if(!empty($lesson_id)) $this->db->where('parent_lesson_id', $lesson_id);
+        $this->db->order_by('id', 'desc');
         return $this->db->get('vw_moderation');
     }
 

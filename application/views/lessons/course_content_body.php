@@ -161,7 +161,7 @@
                         <div class="clearfix"></div>
                         <p><?= $comment['comment'] ?></p>
                         <p>
-                            <a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>
+                            <!--<a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>-->
                         <div class="reply-box" id="reply-box-<?php echo $comment['id']; ?>"></div>
                         <!--<a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>-->
                         </p>
