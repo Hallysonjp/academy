@@ -69,6 +69,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="<?php echo site_url('admin/moderation/approve/'.$moderation['id']) ?>">Aprovar</a></li>
                                         <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/unapprove/'.$moderation['id']); ?>');">Reprovar</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo site_url('modal/popup/reply_comment/'.$moderation['id'].'/'.$moderation['lesson_id'].'/'.$moderation['course_id']); ?>');">Responder</a></li>
                                     </ul>
                                 </div>
                               </td>
