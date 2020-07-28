@@ -171,7 +171,7 @@
                     $lesson_comments_reply = $this->crud_model->get_lesson_comments_reply($lesson_id, $lesson_details['course_id'], $comment['id'])->result_array();
                     foreach ($lesson_comments_reply as $reply):
                     $user_comment_reply = $this->user_model->get_user($reply['user_id'])->row_array();
-                    if($user_comment_reply['status'] == 1):
+                    if($reply['status'] == 1):
                 ?>
                 <div class="card card-inner">
                     <div class="card-body bg-white">
