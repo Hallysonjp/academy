@@ -152,11 +152,6 @@
                                     <?= $user_comment['first_name'] . " " . $user_comment['last_name'] ?>
                                 </strong>
                             </a>
-                            <!--<span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>-->
-
                         </p>
                         <div class="clearfix"></div>
                         <p><?= $comment['comment'] ?></p>
@@ -187,7 +182,39 @@
                         </div>
                     </div>
                 </div>
-                <?php endif; endforeach; endif; endforeach; ?>
+                <?php endif; endforeach; ?>
+
+                <?php elseif (empty($comment['parent_lesson_id']) && $comment['status'] == 0 && $comment['user_id'] == $this->session->userdata('user_id')): ?>
+                <div class="row border row-comment">
+                    <div class="col-sm-12 col-lg-2 mx-auto text-center">
+                        <img src="<?php echo $this->user_model->get_user_image_url($comment['user_id']); ?>" width="50" alt="user-image" class="rounded-circle">
+                        <p class="text-secondary text-center minutes"><?php echo $this->crud_model->tempo_corrido($comment['added_at']); ?></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-10 mx-auto">
+                        <p>
+                            <a class="float-left" href="#">
+                                <strong>
+                                    <?= $user_comment['first_name'] . " " . $user_comment['last_name'] ?>
+                                </strong>
+                            </a>
+                        </p>
+                        <div class="clearfix"></div>
+                        <p><?= $comment['comment'] ?></p>
+                        <p>
+                            <!--<a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>-->
+                        <div class="reply-box" id="reply-box-<?php echo $comment['id']; ?>"></div>
+
+                            <p class="float-right btn text-white">
+                            <i class="fa fa-exclamation-triangle"></i>
+                                <small>Este comentário estará disponível apenas para você até ser aprovado.</small>
+                            </p>
+
+                        </p>
+                    </div>
+                </div>
+
+
+                <?php endif; endforeach; ?>
             </div>
         </div>
     </div>

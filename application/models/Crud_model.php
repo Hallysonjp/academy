@@ -1214,7 +1214,7 @@ class Crud_model extends CI_Model
 
         public function add_lesson_comment($dados){
             unset($dados['url-reply'], $dados['button']);
-            $dados['status'] = $this->session->userdata('role_id') == 1 ? 1 : 0;
+            $dados['status'] = $this->session->userdata('role_id') == 1 || $this->session->userdata('is_instructor') ? 1 : 0;
             return $this->db->insert('lesson_comments', $dados);
         }
 

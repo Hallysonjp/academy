@@ -579,6 +579,8 @@ class Home extends CI_Controller {
             $this->session->set_flashdata('flash_message', 'Comentário adicionado com sucesso!');
             if($this->session->userdata('role_id') == 1){
                 redirect(site_url('admin/moderation/'), 'refresh');
+            }elseif($this->session->userdata('is_instructor') == 1){
+                redirect(site_url('user/moderation/'), 'refresh');
             }else{
                 $this->output
                     ->set_content_type('application/json')
