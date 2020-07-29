@@ -214,57 +214,27 @@
         <h1 class="page-title">Pedido concluído</h1><span class="d-block mt-2 text-muted"></span>
     </div>
 </div>
-<?php
-    $payment_details = $this->crud_model->get_payment_details_by_user_course($user_id, $course_id);
-    $valorAPagar = $amount_to_pay;
-    $formatado   = number_format(($valorAPagar), '2');
-    $valor       = str_replace('.', ',', $formatado);
-?>
-
-<div class="container-fluid my-6 d-sm-flex justify-content-center">
-    <div class="card px-3 col-md-4">
-        <div class="card-header bg-white">
-            <div class="row justify-content-between">
-                <div class="col">
-                    <p class="text-muted"> N° do pedido: <span class="font-weight-bold text-dark">#<?= $payment_details['id']?></span></p>
-                    <p class="text-muted"> Data da compra: <span class="font-weight-bold text-dark"><?= date('d/m/Y', $payment_details['date_added']) ?></span> </p>
-                </div>
-                <div class="flex-col my-auto">
-<!--                    <h6 class="ml-auto mr-3"> <a href="#">View Details</a> </h6>-->
-                </div>
+<!-- Page Content-->
+<div class="container pb-5 mb-sm-4">
+    <div class="pt-5">
+        <div class="card py-3 mt-sm-3">
+            <div class="card-body text-center">
+                <h3 class="h4 pb-3">Seu pedido foi concluído com sucesso!</h3>
+                <p class="mb-2">Seu curso já está disponível.</p>
+                <p class="mb-2"></p>
+                <p>Caso este seja o seu primeiro acesso, você poderá efetuar o Login utilizando seu e-mail e CPF como senha.</p>
+                <a class="btn btn-secondary mt-3 mr-3" href="<?php echo base_url().'/home' ?>">Início</a><a class="btn btn-primary mt-3" href="<?= base_url().'/login' ?>"><i data-feather="map-pin"></i>&nbsp;Login</a>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="media flex-column flex-sm-row">
-                <div class="col-md-12 text-center mb-5 mt-3">
-                    <h4>Seu pedido foi concluído com sucesso!</h4>
-                    <h6>O curso já está disponível</h6>
-                </div>
-            </div>
-            <div class="media flex-column flex-sm-row">
-                <div class="media-body ">
-                    <h5 class="bold"><?= $course_title ?></h5>
-                    <p class="text-muted">Via: <?= $payment_details['payment_type'] ?></p>
-<!--                    <button type="button" class="btn btn-outline-primary d-flex">Reached Hub, Delhi</button>-->
-                </div>
-                <div class="media-body mx-auto text-center">
-                    <img class="align-self-center img-fluid" src="<?= $this->crud_model->get_course_thumbnail_url($course_id) ?>" width="180 " height="180">
-                </div>
-            </div>
-        </div>
-        <div class="card-footer bg-white px-sm-3 pt-sm-4 px-0">
-            <div class="row text-center col-md-12 text-center mb-5 mt-3">
-                <p class="text-muted text-center">Caso este seja o seu primeiro acesso, você poderá efetuar o Login utilizando seu e-mail e CPF como senha.</p>
-                <div style="margin: 0 auto; display: block">
-                    <a class="btn btn-secondary mt-3 mr-3" href="<?php echo base_url().'home' ?>">Início</a><a class="btn btn-primary mt-3" href="<?= base_url().'login' ?>"><i data-feather="map-pin"></i>&nbsp;Login</a>
-                </div>
-            </div>
-
-
-
         </div>
     </div>
 </div>
+<!-- Footer-->
+<footer class="page-footer bg-dark" style="position: absolute;bottom: 0; width: 100%">
+
+    <div class="py-3" style="background-color: #1a1a1a;">
+        <div class="container font-size-xs text-center" aria-label="Copyright"><span class="text-white opacity-60 mr-1">© Todos os direitos reservados</div>
+    </div>
+</footer>
 
 <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
 <script src="<?= base_url() ?>assets/payment/js/vendor.min.js"></script>
