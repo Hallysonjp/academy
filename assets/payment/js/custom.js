@@ -121,8 +121,7 @@ function openModal(url) {
         closeOnConfirm: false
     }).then((result) => {
         if (result.value) {
-
-
+            window.location.href = url;
         }
     });
 }
