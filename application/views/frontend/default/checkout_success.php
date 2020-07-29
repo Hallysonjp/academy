@@ -37,6 +37,11 @@
 </head>
 <!-- Body-->
 <body>
+<?php
+    $usuario = $this->user_model->get_all_user($user_id)->row_array();
+    $cpf     = $this->payment_model->soNumero($usuario['cpf']);
+    $email   = $usuario['email'];
+?>
 <!-- Page Title-->
 <div class="page-title-wrapper" aria-label="Page title">
     <div class="container">
@@ -56,11 +61,12 @@
     <div class="pt-5">
         <div class="card py-3 mt-sm-3">
             <div class="card-body text-center">
+                <div id="dados" data-cpf="<?= $cpf ?>" data-email="<?= $email ?>"></div>
                 <h3 class="h4 pb-3">Seu pedido foi concluído com sucesso!</h3>
                 <p class="mb-2">Seu curso já está disponível.</p>
                 <p class="mb-2"></p>
                 <p>Caso este seja o seu primeiro acesso, você poderá efetuar o Login utilizando seu e-mail e CPF como senha.</p>
-                <a class="btn btn-primary mt-3" href="<?= base_url().'/login' ?>"><i data-feather="map-pin"></i>&nbsp;Acessar o curso</a>
+                <a class="btn btn-primary mt-3" href="#" onclick="openModal('<?= base_url()."login" ?>')"><i data-feather="map-pin"></i>&nbsp;Acessar o curso</a>
             </div>
         </div>
     </div>
@@ -74,6 +80,7 @@
 </footer>
 
 <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="<?= base_url() ?>assets/payment/js/vendor.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/card.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/theme.min.js"></script>

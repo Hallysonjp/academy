@@ -101,3 +101,28 @@ function validarCPF(cpf) {
 function alertMessage(message, type) {
     swal(message, type);
 }
+
+function openModal(url) {
+
+    var email = $("#dados").data('email');
+    var cpf   = $("#dados").data('cpf');
+
+    swal.fire({
+        icon: 'info',
+        title: "Lembrete",
+        html: "<p>Para acessar o seu curso, você deverá utilizar os seguintes dados</p>" +
+              "<p>Email: "+ email +"</p>" +
+              "<p>Senha: " + cpf +"</p>" +
+              "<small><p style='color: #dd4444'>Estes dados estão visíveis apenas para você.</p></small>",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#5c77fc",
+        confirmButtonText: "Acessar!",
+        closeOnConfirm: false
+    }).then((result) => {
+        if (result.value) {
+
+
+        }
+    });
+}
