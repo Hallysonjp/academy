@@ -86,7 +86,7 @@
 <script src="<?= base_url() ?>assets/payment/js/theme.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/jquery.mask.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/busca_cep.js"></script>
-<script src="<?= base_url() ?>assets/payment/js/custom.js"></script>
+<script src="<?= base_url() ?>assets/payment/js/custom.js?<?= time() ?>"></script>
 <script src="<?= base_url() ?>assets/payment/customizer/customizer.min.js"></script>
 </body>
 </html>
