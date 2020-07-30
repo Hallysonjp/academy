@@ -108,13 +108,13 @@ function openModal(url) {
     var cpf   = $("#dados").data('cpf');
 
     swal.fire({
-        icon: 'info',
         title: "Lembrete",
         html: "<p><span style='color: #dd4444'>Caso este seja o seu primeiro acesso</span>, você deverá utilizar os seguintes dados para acessar o seu curso.</p>" +
               "<p>Email: Seu e-mail</p>" +
               "<p>Senha: Seu CPF (Somente números)</p>",
         type: "info",
         showCancelButton: true,
+        cancelButtonText: "Sair.",
         confirmButtonColor: "#5c77fc",
         confirmButtonText: "Acessar!",
         closeOnConfirm: false
