@@ -137,7 +137,7 @@
                 <?php
 
                     foreach ($lesson_comments as $comment):
-                        if (empty($comment['parent_lesson_id'])):
+                        if (empty($comment['parent_lesson_id']) && $comment['status'] == 1):
                             $user_comment = $this->user_model->get_user($comment['user_id'])->row_array();
                 ?>
                 <div class="row border row-comment">
@@ -152,16 +152,11 @@
                                     <?= $user_comment['first_name'] . " " . $user_comment['last_name'] ?>
                                 </strong>
                             </a>
-                            <!--<span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>
-                            <span class="float-right"><i class="text-warning fa fa-star"></i></span>-->
-
                         </p>
                         <div class="clearfix"></div>
                         <p><?= $comment['comment'] ?></p>
                         <p>
-                            <a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>
+                            <!--<a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>-->
                         <div class="reply-box" id="reply-box-<?php echo $comment['id']; ?>"></div>
                         <!--<a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>-->
                         </p>
@@ -170,7 +165,8 @@
                 <?php
                     $lesson_comments_reply = $this->crud_model->get_lesson_comments_reply($lesson_id, $lesson_details['course_id'], $comment['id'])->result_array();
                     foreach ($lesson_comments_reply as $reply):
-                    $user_comment_reply = $this->user_model->get_user($reply['user_id'])->row_array();
+                    $user_comment_reply = $this->user_model->get_all_user($reply['user_id'])->row_array();
+                    if($reply['status'] == 1):
                 ?>
                 <div class="card card-inner">
                     <div class="card-body bg-white">
@@ -186,7 +182,39 @@
                         </div>
                     </div>
                 </div>
-                <?php endforeach; endif; endforeach; ?>
+                <?php endif; endforeach; ?>
+
+                <?php elseif (empty($comment['parent_lesson_id']) && $comment['status'] == 0 && $comment['user_id'] == $this->session->userdata('user_id')): ?>
+                <div class="row border row-comment">
+                    <div class="col-sm-12 col-lg-2 mx-auto text-center">
+                        <img src="<?php echo $this->user_model->get_user_image_url($comment['user_id']); ?>" width="50" alt="user-image" class="rounded-circle">
+                        <p class="text-secondary text-center minutes"><?php echo $this->crud_model->tempo_corrido($comment['added_at']); ?></p>
+                    </div>
+                    <div class="col-sm-12 col-lg-10 mx-auto">
+                        <p>
+                            <a class="float-left" href="#">
+                                <strong>
+                                    <?= $user_comment['first_name'] . " " . $user_comment['last_name'] ?>
+                                </strong>
+                            </a>
+                        </p>
+                        <div class="clearfix"></div>
+                        <p><?= $comment['comment'] ?></p>
+                        <p>
+                            <!--<a class="float-right btn text-white btn-outline-primary ml-2" onclick="replyComment(<?php echo $comment['id']; ?>)"> <i class="fa fa-reply"></i> Responder</a>-->
+                        <div class="reply-box" id="reply-box-<?php echo $comment['id']; ?>"></div>
+
+                            <p class="float-right btn text-white">
+                            <i class="fa fa-exclamation-triangle"></i>
+                                <small>Este comentário estará disponível apenas para você até ser aprovado.</small>
+                            </p>
+
+                        </p>
+                    </div>
+                </div>
+
+
+                <?php endif; endforeach; ?>
             </div>
         </div>
     </div>
@@ -227,7 +255,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 
 <style>

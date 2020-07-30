@@ -183,6 +183,26 @@ class Admin extends CI_Controller {
         $this->load->view('backend/index', $page_data);
     }
 
+    public function moderation($param1 = "", $param2 = "") {
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        if ($param1 == "approve") {
+            $this->crud_model->approve_comment($param2);
+            redirect(site_url('admin/moderation'), 'refresh');
+        }
+        elseif ($param1 == "unapprove") {
+            $this->crud_model->unapprove_comment($param2);
+            redirect(site_url('admin/moderation'), 'refresh');
+        }
+
+        $page_data['page_name']  = 'moderation';
+        $page_data['page_title'] = 'Moderação';
+        $page_data['moderation'] = $this->crud_model->get_moderations();
+        $page_data['reply']      = $this->crud_model->get_moderations(true);
+        $this->load->view('backend/index', $page_data);
+    }
+
     public function user_form($param1 = "", $param2 = "") {
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');

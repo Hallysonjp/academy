@@ -30,6 +30,12 @@ $status_wise_courses = $this->crud_model->get_status_wise_courses();
 					<span><?php echo get_phrase('course_manager'); ?></span>
 				</a>
 			</li>
+            <li class="side-nav-item">
+                <a href="<?php echo site_url('user/moderation'); ?>" class="side-nav-link <?php if ($page_name == 'navigation')echo 'active';?>">
+                    <i class="dripicons-thumbs-up"></i>
+                    <span>Moderação</span>
+                </a>
+            </li>
 			<li class="side-nav-item">
 				<a href="<?php echo site_url('user/sales_report'); ?>" class="side-nav-link <?php if ($page_name == 'report' || $page_name == 'invoice')echo 'active';?>">
 					<i class="dripicons-to-do"></i>

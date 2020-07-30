@@ -752,6 +752,23 @@ class Crud_model extends CI_Model
         $this->session->set_flashdata('flash_message', 'Curso clonado com sucesso!');
     }
 
+    public function get_moderations($reply = false, $lesson_id = null) {
+        if($reply) $this->db->where('parent_lesson_id IS NOT NULL', null, false);
+        if(!empty($lesson_id)) $this->db->where('parent_lesson_id', $lesson_id);
+        $this->db->order_by('id', 'desc');
+        return $this->db->get('vw_moderation');
+    }
+
+    public function approve_comment($commentId) {
+        $this->db->where('id', $commentId);
+        $this->db->update('lesson_comments', ['status' => 1]);
+    }
+
+    public function unapprove_comment($commentId) {
+        $this->db->where('id', $commentId);
+        $this->db->update('lesson_comments', ['status' => 2]);
+    }
+
     public function add_section_clone($course_id, $section)
     {
         $data['title']            = $section['title'];
@@ -1196,7 +1213,8 @@ class Crud_model extends CI_Model
         }
 
         public function add_lesson_comment($dados){
-            unset($dados['url-reply']);
+            unset($dados['url-reply'], $dados['button']);
+            $dados['status'] = $this->session->userdata('role_id') == 1 || $this->session->userdata('is_instructor') ? 1 : 0;
             return $this->db->insert('lesson_comments', $dados);
         }
 

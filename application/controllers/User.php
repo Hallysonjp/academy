@@ -285,6 +285,27 @@ class User extends CI_Controller {
         }
     }
 
+    public function moderation($param1 = "", $param2 = "") {
+        if ($this->session->userdata('user_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+
+        if ($param1 == "approve") {
+            $this->crud_model->approve_comment($param2);
+            redirect(site_url('user/moderation'), 'refresh');
+        }
+        elseif ($param1 == "unapprove") {
+            $this->crud_model->unapprove_comment($param2);
+            redirect(site_url('user/moderation'), 'refresh');
+        }
+
+        $page_data['page_name']  = 'moderation';
+        $page_data['page_title'] = 'Moderação';
+        $page_data['moderation'] = $this->crud_model->get_moderations();
+        $page_data['reply']      = $this->crud_model->get_moderations(true);
+        $this->load->view('backend/index', $page_data);
+    }
+
     public function payout_settings($param1 = "") {
         if ($this->session->userdata('user_login') != true) {
             redirect(site_url('login'), 'refresh');

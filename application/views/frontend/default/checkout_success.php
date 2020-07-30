@@ -34,172 +34,14 @@
             '../../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-PVV9F7F');
     </script>
-    <style>
-        body {
-            letter-spacing: 0.8px;
-            background: linear-gradient(0deg, #fff, 50%, #f1f1f1);
-            background-repeat: no-repeat
-        }
-
-        .container-fluid {
-            margin-top: 40px !important;
-            margin-bottom: 80px !important
-        }
-
-        p {
-            font-size: 14px;
-            margin-bottom: 7px
-        }
-
-        .cursor-pointer {
-            cursor: pointer
-        }
-
-        .bold {
-            font-weight: 600
-        }
-
-        .small {
-            font-size: 12px !important;
-            letter-spacing: 0.5px !important
-        }
-
-        .Today {
-            color: rgb(83, 83, 83)
-        }
-
-        .btn-outline-primary {
-            background-color: #fff !important;
-            color: #4bb8a9 !important;
-            border: 1.3px solid #4bb8a9;
-            font-size: 12px;
-            border-radius: 0.4em !important
-        }
-
-        .btn-outline-primary:hover {
-            background-color: #4bb8a9 !important;
-            color: #fff !important;
-            border: 1.3px solid #4bb8a9
-        }
-
-        .btn-outline-primary:focus,
-        .btn-outline-primary:active {
-            outline: none !important;
-            box-shadow: none !important;
-            border-color: #42A5F5 !important
-        }
-
-        #progressbar {
-            margin-bottom: 30px;
-            overflow: hidden;
-            color: #455A64;
-            padding-left: 0px;
-            margin-top: 30px
-        }
-
-        #progressbar li {
-            list-style-type: none;
-            font-size: 13px;
-            width: 33.33%;
-            float: left;
-            position: relative;
-            font-weight: 400;
-            color: #455A64 !important
-        }
-
-        #progressbar #step1:before {
-            content: "1";
-            color: #fff;
-            width: 29px;
-            margin-left: 15px !important;
-            padding-left: 11px !important
-        }
-
-        #progressbar #step2:before {
-            content: "2";
-            color: #fff;
-            width: 29px
-        }
-
-        #progressbar #step3:before {
-            content: "3";
-            color: #fff;
-            width: 29px;
-            margin-right: 15px !important;
-            padding-right: 11px !important
-        }
-
-        #progressbar li:before {
-            line-height: 29px;
-            display: block;
-            font-size: 12px;
-            background: #455A64;
-            border-radius: 50%;
-            margin: auto
-        }
-
-        #progressbar li:after {
-            content: '';
-            width: 121%;
-            height: 2px;
-            background: #455A64;
-            position: absolute;
-            left: 0%;
-            right: 0%;
-            top: 15px;
-            z-index: -1
-        }
-
-        #progressbar li:nth-child(2):after {
-            left: 50%
-        }
-
-        #progressbar li:nth-child(1):after {
-            left: 25%;
-            width: 121%
-        }
-
-        #progressbar li:nth-child(3):after {
-            left: 25% !important;
-            width: 50% !important
-        }
-
-        #progressbar li.active:before,
-        #progressbar li.active:after {
-            background: #4bb8a9
-        }
-
-        .card {
-            background-color: #fff;
-            box-shadow: 2px 4px 15px 0px rgb(97, 97, 97);
-            z-index: 0
-        }
-
-        small {
-            font-size: 12px !important
-        }
-
-        .a {
-            justify-content: space-between !important
-        }
-
-        .border-line {
-            border-right: 1px solid rgb(226, 206, 226)
-        }
-
-        .card-footer img {
-            opacity: 0.3
-        }
-
-        .card-footer h5 {
-            font-size: 1.1em;
-            color: #8C9EFF;
-            cursor: pointer
-        }
-    </style>
 </head>
 <!-- Body-->
 <body>
+<?php
+    $usuario = $this->user_model->get_all_user($user_id)->row_array();
+    $cpf     = $this->payment_model->soNumero($usuario['cpf']);
+    $email   = $usuario['email'];
+?>
 <!-- Page Title-->
 <div class="page-title-wrapper" aria-label="Page title">
     <div class="container">
@@ -219,11 +61,12 @@
     <div class="pt-5">
         <div class="card py-3 mt-sm-3">
             <div class="card-body text-center">
+                <div id="dados" data-cpf="<?= $cpf ?>" data-email="<?= $email ?>"></div>
                 <h3 class="h4 pb-3">Seu pedido foi concluído com sucesso!</h3>
                 <p class="mb-2">Seu curso já está disponível.</p>
                 <p class="mb-2"></p>
                 <p>Caso este seja o seu primeiro acesso, você poderá efetuar o Login utilizando seu e-mail e CPF como senha.</p>
-                <a class="btn btn-secondary mt-3 mr-3" href="<?php echo base_url().'/home' ?>">Início</a><a class="btn btn-primary mt-3" href="<?= base_url().'/login' ?>"><i data-feather="map-pin"></i>&nbsp;Login</a>
+                <a class="btn btn-primary mt-3" href="#" onclick="openModal('<?= base_url()."login" ?>')"><i data-feather="map-pin"></i>&nbsp;Acessar o curso</a>
             </div>
         </div>
     </div>
@@ -237,6 +80,7 @@
 </footer>
 
 <!-- JavaScript (jQuery) libraries, plugins and custom scripts-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="<?= base_url() ?>assets/payment/js/vendor.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/card.min.js"></script>
 <script src="<?= base_url() ?>assets/payment/js/theme.min.js"></script>
