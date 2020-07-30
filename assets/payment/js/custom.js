@@ -112,7 +112,7 @@ function openModal(url) {
         title: "Lembrete",
         html: "<p><span style='color: #dd4444'>Caso este seja o seu primeiro acesso</span>, você deverá utilizar os seguintes dados para acessar o seu curso.</p>" +
               "<p>Email: Seu e-mail</p>" +
-              "<p>Senha: Seu CPF (sem dígitos)</p>",
+              "<p>Senha: Seu CPF (Somente números)</p>",
         type: "info",
         showCancelButton: true,
         confirmButtonColor: "#5c77fc",
