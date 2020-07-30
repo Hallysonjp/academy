@@ -110,10 +110,9 @@ function openModal(url) {
     swal.fire({
         icon: 'info',
         title: "Lembrete",
-        html: "<p>Para acessar o seu curso, você deverá utilizar os seguintes dados</p>" +
-              "<p>Email: "+ email +"</p>" +
-              "<p>Senha: " + cpf +"</p>" +
-              "<small><p style='color: #dd4444'>Estes dados estão visíveis apenas para você.</p></small>",
+        html: "<p><span style='color: #dd4444'>Caso este seja o seu primeiro acesso</span>, você deverá utilizar os seguintes dados para acessar o seu curso.</p>" +
+              "<p>Email: Seu e-mail</p>" +
+              "<p>Senha: Seu CPF (sem dígitos)</p>",
         type: "info",
         showCancelButton: true,
         confirmButtonColor: "#5c77fc",
