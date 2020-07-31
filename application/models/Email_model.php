@@ -171,7 +171,7 @@ class Email_model extends CI_Model {
 			'smtp_user' => get_settings('smtp_user'),
 			'smtp_pass' => get_settings('smtp_pass'),
 			'mailtype'  => 'html',
-			'charset'   => 'iso-8859-1'
+			'charset'   => 'utf-8'
 		);
 		$this->email->initialize($config);
 		$this->email->set_mailtype("html");
