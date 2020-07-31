@@ -68,32 +68,50 @@ class Email_model extends CI_Model {
 	    }
 	}
 
+    public function course_purchase_notification_pagarme($student_id = "", $payment_method = "", $amount_paid = "", $post = null){
+
+	    //$purchased_courses 	= $this->session->userdata('cart_items');
+        $student_data 		= $this->user_model->get_user($student_id)->row_array();
+        $student_full_name 	= $student_data['first_name'].' '.$student_data['last_name'];
+        $admin_id 			= $this->user_model->get_admin_details()->row('id');
+
+        $course_owner_user_id = $this->crud_model->get_course_by_id($post['course_id'])->row('user_id');
+        if($course_owner_user_id == $admin_id):
+            $this->course_purchase_notification_instructor($post['course_id'], $student_full_name, $student_data['email']);
+            $this->course_purchase_notification_student($post['course_id'], $student_id);
+        else:
+            $this->course_purchase_notification_admin($post['course_id'], $student_full_name, $student_data['email'], $amount_paid);
+            $this->course_purchase_notification_instructor($post['course_id'], $student_full_name, $student_data['email']);
+            $this->course_purchase_notification_student($post['course_id'], $student_id);
+        endif;
+    }
+
 	public function course_purchase_notification_admin($course_id = "", $student_full_name = "", $student_email = "", $amount = ""){
 		$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
 		$admin_email_to = $this->user_model->get_admin_details()->row('email');
 		$instructor_details = $this->user_model->get_user($course_details['user_id'])->row_array();
-		$subject = "The course has sold out";
+		$subject = "Mais um curso acaba de ser vendido";
 		$admin_msg = "<h2>".$course_details['title']."</h2>";
-		$admin_msg .= "<h3><b><u><span style='color: #2ec75e;'>Course Price : ".currency($amount)."</span></u></b></h3>";
-		$admin_msg .= "<p><b>Course owner:</b></p>";
-		$admin_msg .= "<p>Name: <b>".$instructor_details['first_name']." ".$instructor_details['last_name']."</b></p>";
-		$admin_msg .= "<p>Email: <b>".$instructor_details['email']."</b></p>";
+		$admin_msg .= "<h3><b><u><span style='color: #2ec75e;'>Valor do Curso : ".currency($amount)."</span></u></b></h3>";
+		$admin_msg .= "<p><b>Instrutor:</b></p>";
+		$admin_msg .= "<p>Nome: <b>".$instructor_details['first_name']." ".$instructor_details['last_name']."</b></p>";
+		$admin_msg .= "<p>E-mail: <b>".$instructor_details['email']."</b></p>";
 		$admin_msg .= "<hr style='opacity: .4;'>";
-		$admin_msg .= "<p><b>Bought the course:-</b></p>";
-		$admin_msg .= "<p>Name: <b>".$student_full_name."</b></p>";
-		$admin_msg .= "<p>Email: <b>".$student_email."</b></p>";
+		$admin_msg .= "<p><b>Quem comprou:-</b></p>";
+		$admin_msg .= "<p>Nome: <b>".$student_full_name."</b></p>";
+		$admin_msg .= "<p>E-mail: <b>".$student_email."</b></p>";
 		$this->send_smtp_mail($admin_msg, $subject, $admin_email_to);
 	}
 
 	public function course_purchase_notification_instructor($course_id = "",$student_full_name = "", $student_email = ""){
 		$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
 		$instructor_email_to = $this->user_model->get_user($course_details['user_id'])->row('email');
-		$subject = "The course has sold out";
+		$subject = "Curso vendido";
 		$instructor_msg = "<h2>".$course_details['title']."</h2>";
-		$instructor_msg .= "<p>Congratulation!! Your <b>".$course_details['title']."</b> courses have been sold.</p>";
-		$instructor_msg .= "<p><b>Bought the course:-</b></p>";
-		$instructor_msg .= "<p>Name: <b>".$student_full_name."</b></p>";
-		$instructor_msg .= "<p>Email: <b>".$student_email."</b></p>";
+		$instructor_msg .= "<p>Parabéns!! O seu curso <b>".$course_details['title']."</b> acaba de ser vendido.</p>";
+		$instructor_msg .= "<p><b>Quem comprou:-</b></p>";
+		$instructor_msg .= "<p>Nome: <b>".$student_full_name."</b></p>";
+		$instructor_msg .= "<p>E-mail: <b>".$student_email."</b></p>";
 		$this->send_smtp_mail($instructor_msg, $subject, $instructor_email_to);
 	}
 
@@ -101,13 +119,13 @@ class Email_model extends CI_Model {
 		$course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
 		$student_email_to = $this->user_model->get_user($student_id)->row('email');
 		$instructor_details = $this->user_model->get_user($course_details['user_id'])->row_array();
-		$subject = "Course Purchase";
+		$subject = "Curso Adquirido.";
 		$student_msg = "<h2>".$course_details['title']."</h2>";
-		$student_msg .= "<p><b>Congratulation!!</b> Your have purchased a <b>".$course_details['title']."</b> course.</p>";
+		$student_msg .= "<p><b>Parabéns!!</b> Você acaba de adquirir o curso <b>".$course_details['title']."</b></p>";
 		$student_msg .= "<hr style='opacity: .4;'>";
-		$student_msg .= "<p><b>Course owner:</b></p>";
-		$student_msg .= "<p>Name: <b>".$instructor_details['first_name']." ".$instructor_details['last_name']."</b></p>";
-		$student_msg .= "<p>Email: <b>".$instructor_details['email']."</b></p>";
+		$student_msg .= "<p><b>Ministrado por:</b></p>";
+		$student_msg .= "<p>Nome: <b>".$instructor_details['first_name']." ".$instructor_details['last_name']."</b></p>";
+		$student_msg .= "<p>E-mail: <b>".$instructor_details['email']."</b></p>";
 		$this->send_smtp_mail($student_msg, $subject, $student_email_to);
 	}
 
