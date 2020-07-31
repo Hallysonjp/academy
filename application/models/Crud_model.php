@@ -769,6 +769,16 @@ class Crud_model extends CI_Model
         $this->db->update('lesson_comments', ['status' => 2]);
     }
 
+    public function archive_comment($commentId) {
+        $this->db->where('id', $commentId);
+        $this->db->update('lesson_comments', ['status' => 3]);
+    }
+
+    public function delete_comment($commentId) {
+        $this->db->where('id', $commentId);
+        $this->db->delete('lesson_comments');
+    }
+
     public function add_section_clone($course_id, $section)
     {
         $data['title']            = $section['title'];

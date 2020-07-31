@@ -187,12 +187,16 @@ class Admin extends CI_Controller {
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
-        if ($param1 == "approve") {
-            $this->crud_model->approve_comment($param2);
-            redirect(site_url('admin/moderation'), 'refresh');
-        }
-        elseif ($param1 == "unapprove") {
-            $this->crud_model->unapprove_comment($param2);
+        if(!empty($param1)){
+            if ($param1 == "approve") {
+                $this->crud_model->approve_comment($param2);
+            }elseif ($param1 == "unapprove") {
+                $this->crud_model->unapprove_comment($param2);
+            }elseif ($param1 == "archive") {
+                $this->crud_model->archive_comment($param2);
+            }elseif ($param1 == "delete") {
+                $this->crud_model->delete_comment($param2);
+            }
             redirect(site_url('admin/moderation'), 'refresh');
         }
 
