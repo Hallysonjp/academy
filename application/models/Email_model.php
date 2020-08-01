@@ -122,7 +122,9 @@ class Email_model extends CI_Model {
 		$subject = "Curso Adquirido.";
 		$student_msg = "<h2>".$course_details['title']."</h2>";
 		$student_msg .= "<p><b>Parabéns!!</b> Você acaba de adquirir o curso <b>".$course_details['title']."</b></p>";
-		$student_msg .= "<hr style='opacity: .4;'>";
+        $student_msg .= "<hr style='opacity: .4;'>";
+        $student_msg .= "<p><b>Atenção!</b> Caso seja o seu primeiro acesso utilize o seu e-mail como usuário e CPF como senha (Somente números)</p>";
+        $student_msg .= "<hr style='opacity: .4;'>";
 		$student_msg .= "<p><b>Ministrado por:</b></p>";
 		$student_msg .= "<p>Nome: <b>".$instructor_details['first_name']." ".$instructor_details['last_name']."</b></p>";
 		$student_msg .= "<p>E-mail: <b>".$instructor_details['email']."</b></p>";
