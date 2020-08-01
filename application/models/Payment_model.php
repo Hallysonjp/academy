@@ -215,16 +215,16 @@ class Payment_model extends CI_Model {
 
     }
 
-    public function checkar_taxa_juros($publicKey, $data = null){
+    public function checkar_taxa_juros($publicKey, $amount = null){
         require_once(APPPATH.'../vendor/autoload.php');
 
         $pagarme = new PagarMe\Client($publicKey);
 
         $calculateInstallments = $pagarme->transactions()->calculateInstallments([
-            'amount' => 99700,
+            'amount' => ($amount * 100),
             'free_installments' => 1,
             'max_installments' => 12,
-            'interest_rate' => 5
+            'interest_rate' => 0.8
         ]);
 
         return $calculateInstallments;
