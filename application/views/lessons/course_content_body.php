@@ -128,6 +128,8 @@
             </div>
         </div>
     <?php
+    $enable_comments = $this->crud_model->get_course_by_id($lesson_details['course_id'])->row_array('enable_comments');
+    if(!empty($enable_comments['enable_comments'])):
         $lesson_comments = $this->crud_model->get_lesson_comments($lesson_id, $lesson_details['course_id'])->result_array();
         if(!empty($lesson_comments)):
     ?>
@@ -256,7 +258,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
+<?php endif; ?>
 
 <style>
     .pb-cmnt-container {

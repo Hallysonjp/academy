@@ -134,6 +134,14 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="form-group row mb-3">
+                                                <div class="offset-md-2 col-md-10">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" name="enable_comments" id="enable_comments" value="1">
+                                                        <label class="custom-control-label" for="enable_comments">Selecione para habilitar comentários no curso</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div> <!-- end col -->
                                     </div> <!-- end row -->
                                 </div> <!-- end tab pane -->
