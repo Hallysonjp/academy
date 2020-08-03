@@ -323,6 +323,15 @@ class Admin extends CI_Controller {
         redirect(site_url('admin/enrol_history'), 'refresh');
     }
 
+    public function send_mail_enrol($param1 = "") {
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+        $this->crud_model->send_mail_enrol($param1);
+        $this->session->set_flashdata('flash_message', 'E-mail enviado com sucesso!');
+        redirect(site_url('admin/enrol_history'), 'refresh');
+    }
+
     public function purchase_history() {
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');

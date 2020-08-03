@@ -69,8 +69,6 @@ class Email_model extends CI_Model {
 	}
 
     public function course_purchase_notification_pagarme($student_id = "", $payment_method = "", $amount_paid = "", $post = null){
-
-	    //$purchased_courses 	= $this->session->userdata('cart_items');
         $student_data 		= $this->user_model->get_user($student_id)->row_array();
         $student_full_name 	= $student_data['first_name'].' '.$student_data['last_name'];
         $admin_id 			= $this->user_model->get_admin_details()->row('id');
@@ -130,6 +128,22 @@ class Email_model extends CI_Model {
 		$student_msg .= "<p>E-mail: <b>".$instructor_details['email']."</b></p>";
 		$this->send_smtp_mail($student_msg, $subject, $student_email_to);
 	}
+
+    public function course_enrol_notification_student($course_id = "", $student_id = ""){
+        $course_details = $this->crud_model->get_course_by_id($course_id)->row_array();
+        $student_email_to = $this->user_model->get_user($student_id)->row('email');
+        $instructor_details = $this->user_model->get_user($course_details['user_id'])->row_array();
+        $subject = "Curso Adquirido.";
+        $student_msg = "<h2>".$course_details['title']."</h2>";
+        $student_msg .= "<p><b>Parabéns!!</b> Você acaba de adquirir o curso <b>".$course_details['title']."</b></p>";
+        $student_msg .= "<hr style='opacity: .4;'>";
+        $student_msg .= "<p><b>Atenção!</b> Caso seja o seu primeiro acesso utilize o seu e-mail como usuário e CPF como senha (Somente números)</p>";
+        $student_msg .= "<hr style='opacity: .4;'>";
+        $student_msg .= "<p><b>Ministrado por:</b></p>";
+        $student_msg .= "<p>Nome: <b>".$instructor_details['first_name']." ".$instructor_details['last_name']."</b></p>";
+        $student_msg .= "<p>E-mail: <b>".$instructor_details['email']."</b></p>";
+        $this->send_smtp_mail($student_msg, $subject, $student_email_to);
+    }
 
 	public function notify_on_certificate_generate($user_id = "", $course_id = "") {
 		$checker = array(
