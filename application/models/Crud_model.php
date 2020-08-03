@@ -504,6 +504,7 @@ class Crud_model extends CI_Model
         $data['date_added'] = strtotime(date('D, d-M-Y'));
         $data['section'] = json_encode(array());
         $data['is_top_course'] = $this->input->post('is_top_course');
+        $data['enable_comments'] = $this->input->post('enable_comments');
         $data['user_id'] = $this->session->userdata('user_id');
         $data['meta_description'] = $this->input->post('meta_description');
         $data['meta_keywords'] = $this->input->post('meta_keywords');
@@ -599,6 +600,12 @@ class Crud_model extends CI_Model
             $data['is_top_course'] = 0;
         } else {
             $data['is_top_course'] = 1;
+        }
+
+        if ($this->input->post('enable_comments') != 1) {
+            $data['enable_comments'] = 0;
+        } else {
+            $data['enable_comments'] = 1;
         }
 
 
