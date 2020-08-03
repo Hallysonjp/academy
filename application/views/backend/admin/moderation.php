@@ -29,6 +29,19 @@
                   </thead>
                   <tbody>
                       <?php
+                      $descricao = [
+                          0 => 'Aguardando',
+                          1 => 'Aprovado',
+                          2 => 'Reprovado',
+                          3 => 'Arquivado'
+                      ];
+
+                      $status = [
+                          0 => 'warning',
+                          1 => 'success',
+                          2 => 'danger',
+                          3 => 'info'
+                      ];
                        foreach ($moderation->result_array() as $key => $moderation):
                        if(empty($moderation['parent_lesson_id'])):
                        ?>
@@ -48,19 +61,6 @@
                                   <p><small><?= $moderation['first_name'].' '.$moderation['last_name']; ?></small></p>
                               </td>
                               <td>
-                                  <?php
-                                    $descricao = [
-                                        0 => 'Aguardando',
-                                        1 => 'Aprovado',
-                                        2 => 'Reprovado'
-                                    ];
-
-                                    $status = [
-                                        0 => 'warning',
-                                        1 => 'success',
-                                        2 => 'danger'
-                                    ]
-                                  ?>
                                   <small><p><span class="badge badge-<?= $status[$moderation['status']] ?>-lighten"><?= $descricao[$moderation['status']] ?></span></p></small>
                               </td>
                               <td>
@@ -71,7 +71,9 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="<?php echo site_url('admin/moderation/approve/'.$moderation['id']) ?>">Aprovar</a></li>
                                         <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/unapprove/'.$moderation['id']); ?>');">Reprovar</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/archive/'.$moderation['id']); ?>');">Arquivar</a></li>
                                         <li><a class="dropdown-item" href="#" onclick="showAjaxModal('<?php echo site_url('modal/popup/reply_comment/'.$moderation['id'].'/'.$moderation['lesson_id'].'/'.$moderation['course_id']); ?>');">Responder</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/delete/'.$moderation['id']); ?>');">Deletar</a></li>
                                     </ul>
                                 </div>
                               </td>
@@ -110,19 +112,6 @@
                                                     <p><small><?= $reply['first_name'].' '.$reply['last_name']; ?></small></p>
                                                 </td>
                                                 <td width="100">
-                                                    <?php
-                                                    $descricao = [
-                                                        0 => 'Aguardando',
-                                                        1 => 'Aprovado',
-                                                        2 => 'Reprovado'
-                                                    ];
-
-                                                    $status = [
-                                                        0 => 'warning',
-                                                        1 => 'success',
-                                                        2 => 'danger'
-                                                    ]
-                                                    ?>
                                                     <small><p><span class="badge badge-<?= $status[$reply['status']] ?>-lighten"><?= $descricao[$reply['status']] ?></span></p></small>
                                                 </td>
                                                 <td width="50">
@@ -133,6 +122,7 @@
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" href="<?php echo site_url('admin/moderation/approve/'.$reply['id']) ?>">Aprovar</a></li>
                                                             <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/unapprove/'.$reply['id']); ?>');">Reprovar</a></li>
+                                                            <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/moderation/delete/'.$reply['id']); ?>');">Deletar</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
