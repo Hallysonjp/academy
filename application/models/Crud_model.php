@@ -234,6 +234,14 @@ class Crud_model extends CI_Model
         $this->db->delete('enrol');
     }
 
+    public function send_mail_enrol($param1)
+    {
+        $this->db->where('id', $param1);
+        $enrol = $this->db->get('enrol')->row_array();
+
+        $this->email_model->course_enrol_notification_student($enrol['course_id'], $enrol['user_id']);
+    }
+
     public function purchase_history($user_id)
     {
         if ($user_id > 0) {
@@ -1659,6 +1667,7 @@ class Crud_model extends CI_Model
                 } else {
                     $data['date_added'] = strtotime(date('D, d-M-Y'));
                     $this->db->insert('enrol', $data);
+                    $this->email_model->course_enrol_notification_student($data['course_id'], $data['user_id']);
                     $this->session->set_flashdata('flash_message', get_phrase('student_has_been_enrolled_to_that_course'));
                 }
             }
