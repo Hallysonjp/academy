@@ -120,7 +120,7 @@ foreach ($my_courses as $my_course) {
                                   </div>
                                   <div class="row" style="padding: 5px;">
                                       <div class="col-md-6">
-                                          <a href="<?php echo site_url('home/course/'.rawurlencode(slugify($course_details['title'])).'/'.$my_course['course_id']); ?>" class="btn"><?php echo site_phrase('course_detail'); ?></a>
+<!--                                          <a href="--><?php //echo site_url('home/course/'.rawurlencode(slugify($course_details['title'])).'/'.$my_course['course_id']); ?><!--" class="btn">--><?php //echo site_phrase('course_detail'); ?><!--</a>-->
                                       </div>
                                       <div class="col-md-6">
                                            <a href="<?php echo site_url('home/lesson/'.rawurlencode(slugify($course_details['title'])).'/'.$my_course['course_id']); ?>" class="btn"><?php echo site_phrase('start_lesson'); ?></a>
