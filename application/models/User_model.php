@@ -81,6 +81,18 @@ class User_model extends CI_Model {
                 $data['is_instructor'] = 1;
             }
 
+            $data['cpf'] = html_escape($this->input->post('cpf'));
+            $data['code_bank'] = html_escape($this->input->post('codigo_banco'));
+            $data['agencia'] = html_escape($this->input->post('agencia'));
+            $data['agencia_dv'] = html_escape($this->input->post('agencia_dv'));
+            $data['conta'] = html_escape($this->input->post('conta'));
+            $data['conta_dv'] = html_escape($this->input->post('conta_dv'));
+            $data['tipo_conta'] = html_escape($this->input->post('tipo_conta'));
+            $data['transfer_interval'] = html_escape($this->input->post('transfer_interval'));
+            $data['transfer_enabled'] = html_escape($this->input->post('transfer_enabled'));
+            $data['transfer_day'] = html_escape($this->input->post('transfer_day'));
+            $data['percentage'] = html_escape($this->input->post('percentage'));
+
             $this->db->insert('users', $data);
             $user_id = $this->db->insert_id();
             $this->upload_user_image($user_id);
@@ -146,6 +158,18 @@ class User_model extends CI_Model {
             array_push($stripe_info, $stripe_keys);
             $data['stripe_keys'] = json_encode($stripe_info);
 
+            $data['cpf'] = html_escape($this->input->post('cpf'));
+            $data['bank_code'] = html_escape($this->input->post('codigo_banco'));
+            $data['agencia'] = html_escape($this->input->post('agencia'));
+            $data['agencia_dv'] = html_escape($this->input->post('agencia_dv'));
+            $data['conta'] = html_escape($this->input->post('conta'));
+            $data['conta_dv'] = html_escape($this->input->post('conta_dv'));
+            $data['tipo_conta'] = html_escape($this->input->post('tipo_conta'));
+            $data['transfer_interval'] = html_escape($this->input->post('transfer_interval'));
+            $data['transfer_enabled'] = html_escape($this->input->post('transfer_enabled'));
+            $data['transfer_day'] = html_escape($this->input->post('transfer_day'));
+            $data['percentage'] = html_escape($this->input->post('percentage'));
+
             $this->db->where('id', $user_id);
             $this->db->update('users', $data);
             $this->upload_user_image($user_id);
@@ -156,6 +180,20 @@ class User_model extends CI_Model {
 
         $this->upload_user_image($user_id);
     }
+
+    public function edit_account_pagarme($user_id, $account){
+        $data['pagarme_account_id'] = $account;
+        $this->db->where('id', $user_id);
+        $this->db->update('users', $data);
+        $this->session->set_flashdata('flash_message', 'Uma conta foi adicionada ao Pagar.me');
+    }
+
+    public function edit_recipient_pagarme($user_id, $account){
+        $data['recipient_id'] = $account;
+        $this->db->where('id', $user_id);
+        $this->db->update('users', $data);
+    }
+
     public function delete_user($user_id = "") {
         $this->db->where('id', $user_id);
         $this->db->delete('users');

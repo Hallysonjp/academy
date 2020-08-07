@@ -135,6 +135,9 @@ class Admin extends CI_Controller {
         elseif ($param1 == "delete") {
             $this->user_model->delete_user($param2);
             redirect(site_url('admin/instructors'), 'refresh');
+        }elseif ($param1 == "pagarme") {
+            $this->payment_model->create_recipient($param2);
+            redirect(site_url('admin/instructors'), 'refresh');
         }
 
         $page_data['page_name'] = 'instructors';

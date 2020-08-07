@@ -49,6 +49,7 @@
                                             <li><a class="dropdown-item" href="<?php echo site_url('admin/courses?category_id=all&status=all&instructor_id='.$user['id'].'&price=all') ?>"><?php echo get_phrase('view_courses'); ?></a></li>
                                             <li><a class="dropdown-item" href="<?php echo site_url('admin/instructor_form/edit_instructor_form/'.$user['id']) ?>"><?php echo get_phrase('edit'); ?></a></li>
                                             <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/instructors/delete/'.$user['id']); ?>');"><?php echo get_phrase('delete'); ?></a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="confirm_modal('<?php echo site_url('admin/instructors/pagarme/'.$user['id']); ?>');">Criar Conta</a></li>
                                         </ul>
                                     </div>
                                 </td>

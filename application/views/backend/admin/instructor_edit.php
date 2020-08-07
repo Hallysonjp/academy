@@ -146,32 +146,85 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="facebook_link"> <?php echo get_phrase('paypal_client_id'); ?></label>
+                                            <label class="col-md-3 col-form-label" for="codigo_banco"> Código do banco</label>
                                             <div class="col-md-9">
-                                                <input type="text" id="paypal_client_id" name="paypal_client_id" class="form-control" value="<?php echo $paypal_keys[0]['production_client_id']; ?>">
-                                                <small><?php echo get_phrase("required_for_instructor"); ?></small>
+                                                <select class="form-control select2" name="codigo_banco" id="codigo_banco">
+                                                    <option value="0">Selecione um Banco</option>
+                                                    <?php foreach ($this->payment_model->getBancos() as $banco): ?>
+                                                        <option value="<?= $banco['code'] ?>"><?= $banco['code'] . " - " . $banco['name'] ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="facebook_link"> <?php echo get_phrase('paypal_secret_key'); ?></label>
-                                            <div class="col-md-9">
-                                                <input type="text" id="paypal_secret_key" name="paypal_secret_key" class="form-control" value="<?php echo $paypal_keys[0]['production_secret_key']; ?>">
-                                                <small><?php echo get_phrase("required_for_instructor"); ?></small>
+                                            <label class="col-md-3 col-form-label" for="agencia"> Agência</label>
+                                            <div class="col-md-6">
+                                                <input type="text" id="agencia" name="agencia" placeholder="Número da agência" class="form-control" value="<?php echo $user_data['agencia']; ?>">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" id="agencia_dv" name="agencia_dv" placeholder="Dígito da agência" class="form-control" value="<?php echo $user_data['agencia_dv']; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="stripe_public_key"><?php echo get_phrase('stripe_public_key'); ?></label>
-                                            <div class="col-md-9">
-                                                <input type="text" id="stripe_public_key" name="stripe_public_key" class="form-control" value="<?php echo $stripe_keys[0]['public_live_key']; ?>">
-                                                <small><?php echo get_phrase("required_for_instructor"); ?></small>
+                                            <label class="col-md-3 col-form-label" for="agencia"> Conta</label>
+                                            <div class="col-md-6">
+                                                <input type="text" id="conta" name="conta" placeholder="Número da conta" class="form-control" value="<?php echo $user_data['conta']; ?>">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" id="conta_dv" name="conta_dv" placeholder="Dígito da conta" class="form-control" value="<?php echo $user_data['conta_dv']; ?>">
                                             </div>
                                         </div>
                                         <div class="form-group row mb-3">
-                                            <label class="col-md-3 col-form-label" for="stripe_secret_key"><?php echo get_phrase('stripe_secret_key'); ?></label>
+                                            <label class="col-md-3 col-form-label" for="tipo_conta"> Tipo de conta</label>
                                             <div class="col-md-9">
-                                                <input type="text" id="stripe_secret_key" name="stripe_secret_key" class="form-control" value="<?php echo $stripe_keys[0]['secret_live_key']; ?>">
-                                                <small><?php echo get_phrase("required_for_instructor"); ?></small>
+                                                <select class="form-control select2" name="tipo_conta" id="tipo_conta">
+                                                    <option value="0">Selecione um tipo de conta</option>
+                                                    <?php foreach ($this->payment_model->getTiposContas() as $tipo): ?>
+                                                        <option value="<?= $tipo['type'] ?>"><?= $tipo['label'] ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
                                             </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="cpf">CPF</label>
+                                            <div class="col-md-4">
+                                                <input type="text" id="cpf" name="cpf" class="form-control" value="<?php echo $user_data['cpf']; ?>">
+                                            </div>
+                                            <label class="col-md-2 col-form-label" for="percentage">Percentual</label>
+                                            <div class="input-group col-md-3">
+                                                <input type="number" id="percentage" name="percentage" size="3" min="1" max="100" class="form-control" value="<?php echo $user_data['percentage']; ?>">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="transfer_interval"> Intervalo de transferência</label>
+                                            <div class="col-md-9">
+                                                <select class="form-control select2" name="transfer_interval" id="transfer_interval">
+                                                    <option value="0">Selecione um intervalo de transferência</option>
+                                                    <?php foreach ($this->payment_model->getIntervalo() as $tipo): ?>
+                                                        <option value="<?= $tipo['type'] ?>"><?= $tipo['label'] ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-3 col-form-label" for="transfer_enabled"> Transferência automática</label>
+                                            <div class="col-md-2">
+                                                <select class="form-control select2" name="transfer_enabled" id="transfer_enabled">
+                                                    <option value="0">Selecione...</option>
+                                                    <option value="1">Ativo</option>
+                                                    <option value="2">Inativo</option>
+                                                </select>
+                                            </div>
+                                            <label class="col-md-3 col-form-label" for="transfer_day"> Dia para transferência </label>
+                                            <div class="col-md-4">
+                                                <input type="number" id="transfer_day" size="2" min="1" max="31" name="transfer_day" class="form-control" value="<?php echo $user_data['transfer_day']; ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-12 col-form-label" for="stripe_secret_key">*Esses dados são necessários para o pagamento, verifique se o nome e sobrenome estão corretos.</label>
                                         </div>
                                     </div> <!-- end col -->
                                 </div> <!-- end row -->
