@@ -12,11 +12,11 @@ class Email_model extends CI_Model {
 		$query = $this->db->get_where('users' , array('email' => $email));
 		if($query->num_rows() > 0)
 		{
+            $email_msg	=	"<b>Olá,</b>";
+            $email_msg	.=	"<p>A sua senha acaba de ser atualizada.</p>";
+			$email_msg	.=	"Sua nova senha é : ".$new_password."<br />";
 
-			$email_msg	=	"Your password has been changed.";
-			$email_msg	.=	"Your new password is : ".$new_password."<br />";
-
-			$email_sub	=	"Password reset request";
+			$email_sub	=	"Atualização de senha";
 			$email_to	=	$email;
 			//$this->do_email($email_msg , $email_sub , $email_to);
 			$this->send_smtp_mail($email_msg , $email_sub , $email_to);
@@ -30,9 +30,9 @@ class Email_model extends CI_Model {
 
 	public function send_email_verification_mail($to = "", $verification_code = "") {
 		$redirect_url = site_url('login/verify_email_address/'.$verification_code);
-		$subject 		= "Verify Email Address";
-		$email_msg	=	"<b>Hello,</b>";
-		$email_msg	.=	"<p>Please click the link below to verify your email address.</p>";
+		$subject 		= "Verificação de e-mail";
+		$email_msg	=	"<b>Olá,</b>";
+		$email_msg	.=	"<p>Por favor, clique no link abaixo para verificar o seu e-mail e garantir acesso aos cursos.</p>";
 		$this->send_smtp_mail($email_msg, $subject, $to, get_settings('system_email'), 'verification', $redirect_url);
 	}
 
@@ -155,19 +155,19 @@ class Email_model extends CI_Model {
 		$course_details    = $this->crud_model->get_course_by_id($course_id)->row_array();
 		$user_details = $this->user_model->get_all_user($user_id)->row_array();
 		$email_from = get_settings('system_email');
-		$subject 		= "Course Completion Notification";
-		$email_msg	=	"<b>Congratulations!!</b> ". $user_details['first_name']." ".$user_details['last_name'].",";
-		$email_msg	.=	"<p>You have successfully completed the course named, <b>".$course_details['title'].".</b></p>";
-		$email_msg	.=	"<p>You can get your course completion certificate from here <b>".$certificate_link.".</b></p>";
+		$subject 		= "Notificação de conclusão do curso";
+		$email_msg	=	"<b>Parabéns!!</b> ". $user_details['first_name']." ".$user_details['last_name'].",";
+		$email_msg	.=	"<p>Você acabou de concluir o curo <b>".$course_details['title'].".</b></p>";
+		$email_msg	.=	"<p>Você pode baixar o seu certificado de conclusão a partir do link: <b>".$certificate_link.".</b></p>";
 		$this->send_smtp_mail($email_msg, $subject, $user_details['email'], $email_from);
 	}
 
 	public function suspended_offline_payment($user_id = ""){
 		$user_details = $this->user_model->get_all_user($user_id)->row_array();
 		$email_from = get_settings('system_email');
-		$subject 	= "Suspended Offline Payment";
-		$email_msg  = "<p>Your offline payment has been <b style='color: red;'>suspended</b> !</p>";
-		$email_msg .= "<p>Please provide a valid document of your payment.</p>";
+		$subject 	= "Pagamento offline suspenso";
+		$email_msg  = "<p>O seu pagamento offline foi <b style='color: red;'>suspenso</b> !</p>";
+		$email_msg .= "<p>Por favor, verifique os dados e tente efetuar o pagamento novamente.</p>";
 
 		$this->send_smtp_mail($email_msg, $subject, $user_details['email'], $email_from);
 	}
