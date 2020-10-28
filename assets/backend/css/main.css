@@ -8,7 +8,7 @@
 }
 
 .required {
-  color: #f44336;
+  color: #6495ED;
 }
 
 .ellipsis {
@@ -168,19 +168,19 @@ i.material-icons {
   padding: 13px;
   bottom: 40px;
   right: 40px;
-  background-color: #727cf5;
+  background-color: #6495ED;
   color: #fff;
   border-radius: 6px;
   text-align: center;
-  border-color: #727cf5;
-  box-shadow: 2px 2px 3px #999;
+  border-color: #6495ED;
+  box-shadow: 2px 2px 3px black;
 }
 .float:focus{
-  box-shadow: 0 0 0 0.2rem rgba(135,144,247,.5);
+  box-shadow: 0 0 0 0.2rem ;
   color: #fff;
 }
 .float:hover{
-  box-shadow: 0 0 0 0.2rem rgba(135,144,247,.5);
+  box-shadow: 0 0 0 0.2rem ;
   color: #fff;
 }
 
@@ -193,7 +193,7 @@ i.material-icons {
 }
 
 .category-action .action-icon {
-  color: #98a6ad;
+  color: #0000cd;
   font-size: 1.2rem;
   display: inline-block;
   padding: 0 3px;
@@ -207,7 +207,7 @@ i.material-icons {
     width: 100%;
 }
 .bootstrap-tagsinput .tag {
-  background-color: rgb(239, 114, 115);
+  background-color: black;
   border-radius: 3px;
   padding: 0 3px;
 }
